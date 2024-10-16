@@ -2,16 +2,17 @@
   "name": "projetaaw",
   "version": "1.0.0",
   "description": "Projet réalisé dans le cadre du cours d'AAW de l'Université de Poitiers",
-  "main": "index.js",
-  "homepage" : "https://github.com/N4ger0/ProjetAAW",
+  "main": "src/index.js",
+  "homepage": "https://github.com/N4ger0/ProjetAAW",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/index.js"
   },
   "private": true,
   "author": "Paul Caille, Remy Martin, Oregan Hardy",
   "license": "ISC",
   "dependencies": {
     "@google-cloud/local-auth": "^2.1.0",
+    "express": "^4.21.1",
     "googleapis": "^105.0.0",
     "react": "^18.3.1"
   }
