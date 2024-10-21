@@ -1,53 +1,40 @@
 html {
     background-color : #e9d8a6 ;
+    font-family: 'Montserrat', serif;
     --header-height: 100px;
 }
 
 #header {
     width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 #logo {
     height : var(--header-height);
+    flex-grow : 1 ;
 }
 
 #logo img {
     height : inherit;
 }
 
+#menu img {
+    margin : -5px ;
+}
+
 #menu {
-    position : fixed;
-    top : 20px;
-    right : 20px;
-    width : 100px ;
+    width : 60px ;
     display : flex ;
     align-content : center;
     align-items: center;
     flex-direction : column ;
-    z-index: 2 ;
     cursor : pointer;
-}
-
-.gelatine_animate {
-    animation: gelatine 0.5s;
-}
-@keyframes gelatine {
-    from, to {
-        transform: scale(1, 1);
-    }
-    25% {
-        transform: scale(0.9, 1.1);
-    }
-    50% {
-        transform: scale(1.1, 0.9);
-    }
-    75% {
-        transform: scale(0.95, 1.05);
-    }
-}
-
-#menu p {
-    margin : 5px ;
+    position: absolute;
+    z-index: 2;
+    top: 35px;
+    right: 37px;
 }
 
 #root {
@@ -59,36 +46,39 @@ html {
 #sidemenu {
     height : 100% ;
     width : 190px ;
-    background-color : rgb(244,236,194) ;
     position : fixed;
     top : 0px;
-    right : -40px;
+    right : 0px;
     z-index : 1 ;
-    box-shadow: black 1px 1px 1px ;
+    background-color : #e9d8a6 ;
 }
 
 #sidemenu > div {
     padding-top : 140px ;
 }
 
-.bounce-in-right {
-    animation: bounce-in-right 2s ease;
+.hidden {
+    opacity : 0 ;
+}
+
+.slide-in-right {
+    animation: bounce-in-right 1s ease;
+    opacity : 1 !important ;
 }
 @keyframes bounce-in-right {
     0% {
-        opacity: 0;
-        transform: translateX(2000px);
+        transform: translateX(200px);
     }
-    60% {
+    1% {
         opacity: 1 !important;
-        transform: translateX(-30px);
     }
-    80% { transform: translateX(10px); }
-    100% { transform: translateX(0); }
+    100% {
+        opacity : 1 !important;
+        transform: translateX(0); }
 }
 
-#sidemenu.bounce-out-right {
-    animation: bounce-out-right 2s ease;
+#sidemenu.slide-out-right {
+    animation: bounce-out-right 1s ease;
 }
 
 @keyframes bounce-out-right {
@@ -96,29 +86,30 @@ html {
         opacity: 1;
         transform: translateX(0);
     }
-    20% {
-        opacity : 1;
-        transform: translateX(10px);
+    99% {
+        opacity: 1;
     }
-    40% {
-        opacity : 1 ;
-        transform: translateX(-30px); }
     100% {
         opacity: 0;
-        transform: translateX(2000px);
+        transform: translateX(200px);
     }
 }
 
-.hidden {
-    opacity : 0 ;
+#div_stock {
+    position: relative;
+    display: inline-block;
 }
 
-#castronaut {
-    transform: rotateX(var(--rotate-x, 0deg)) rotateY(var(--rotate-y, 0deg));
-    transform-style: preserve-3d;
-    transition: transform 1.5s cubic-bezier(0.05, 0.5, 0, 1);
-    will-change: transform;
-    display : flex;
-    flex-grow : 1 ;
-    align-self: center ;
+#div_stock img {
+    display: block;
+    width : 100%;
+    height: auto;
+}
+
+#div_stock b {
+    color : white ;
+    position: absolute;
+    top: 30%;
+    font-size: 45px;
+    text-align: center;
 }

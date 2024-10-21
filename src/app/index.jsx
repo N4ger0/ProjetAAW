@@ -16,30 +16,16 @@ class Application extends React.Component {
         }
     }
 
-    gelatineAnimation() {
-        const menuImg = document.getElementById("menuimg");
-        const sidemenu = document.getElementById("sidemenu");
-        if(sidemenu.classList.contains("hidden")) {
-            sidemenu.classList.remove("bounce-out-right");
-            sidemenu.classList.remove("hidden");
-            sidemenu.classList.add("bounce-in-right");
-        } else {
-            sidemenu.classList.remove("bounce-in-right");
-            sidemenu.classList.add("hidden");
-            sidemenu.classList.add("bounce-out-right");
-        }
-        menuImg.classList.remove("gelatine_animate");
-        void menuImg.offsetWidth;  // forces a reflow
-        void sidemenu.offsetWidth;
-        menuImg.classList.add("gelatine_animate");
-
-    }
-
     render() {
         return(
             <div>
                 <Header></Header>
-                <p>Test</p>
+                <div id="content">
+                    <div id="div_stock">
+                        <img src={"/img/stock.jpg"} alt={""}/>
+                        <b> Managez les skills de votre équipe !</b>
+                    </div>
+                </div>
             </div>
         );
     }
