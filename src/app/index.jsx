@@ -1,12 +1,14 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import {
     createBrowserRouter,
     Link,
     RouterProvider,
   } from "react-router-dom";
+import Header from "./header"
 
 class Application extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -14,12 +16,30 @@ class Application extends React.Component {
         }
     }
 
+    gelatineAnimation() {
+        const menuImg = document.getElementById("menuimg");
+        const sidemenu = document.getElementById("sidemenu");
+        if(sidemenu.classList.contains("hidden")) {
+            sidemenu.classList.remove("bounce-out-right");
+            sidemenu.classList.remove("hidden");
+            sidemenu.classList.add("bounce-in-right");
+        } else {
+            sidemenu.classList.remove("bounce-in-right");
+            sidemenu.classList.add("hidden");
+            sidemenu.classList.add("bounce-out-right");
+        }
+        menuImg.classList.remove("gelatine_animate");
+        void menuImg.offsetWidth;  // forces a reflow
+        void sidemenu.offsetWidth;
+        menuImg.classList.add("gelatine_animate");
+
+    }
+
     render() {
         return(
             <div>
+                <Header></Header>
                 <p>Test</p>
-                <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/775dfae9-f9b5-46c9-bcd8-62e7d40ba177/dg8idr3-46121b2a-2beb-4f64-9caa-0d046f39eac0.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzc3NWRmYWU5LWY5YjUtNDZjOS1iY2Q4LTYyZTdkNDBiYTE3N1wvZGc4aWRyMy00NjEyMWIyYS0yYmViLTRmNjQtOWNhYS0wZDA0NmYzOWVhYzAuZ2lmIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.miZMDoaMYjzwzNQZzuwxLvu2wrgaxbdJ_47bCgtl1PU" alt="un petit chat"/>
-                <LinkList/>
             </div>
         );
     }
@@ -37,20 +57,7 @@ class SpreedSheet extends React.Component {
     }
 }
 
-let LinkList = ()=>{
-    return <div>
-        <nav>
-            <ul>
-                <li>
-                    <Link to="/">test</Link>
-                </li>
-                <li>
-                    <Link to="/spreedSheet">test2</Link>
-                </li>
-            </ul>
-        </nav>
-    </div>;
-}
+
 
 const router = createBrowserRouter([
     {

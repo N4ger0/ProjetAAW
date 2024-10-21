@@ -1,0 +1,124 @@
+html {
+    background-color : #e9d8a6 ;
+    --header-height: 100px;
+}
+
+#header {
+    width: 100%;
+}
+
+#logo {
+    height : var(--header-height);
+}
+
+#logo img {
+    height : inherit;
+}
+
+#menu {
+    position : fixed;
+    top : 20px;
+    right : 20px;
+    width : 100px ;
+    display : flex ;
+    align-content : center;
+    align-items: center;
+    flex-direction : column ;
+    z-index: 2 ;
+    cursor : pointer;
+}
+
+.gelatine_animate {
+    animation: gelatine 0.5s;
+}
+@keyframes gelatine {
+    from, to {
+        transform: scale(1, 1);
+    }
+    25% {
+        transform: scale(0.9, 1.1);
+    }
+    50% {
+        transform: scale(1.1, 0.9);
+    }
+    75% {
+        transform: scale(0.95, 1.05);
+    }
+}
+
+#menu p {
+    margin : 5px ;
+}
+
+#root {
+    height : 40000px ;
+    width : 100% ;
+    overflow : scroll ;
+}
+
+#sidemenu {
+    height : 100% ;
+    width : 190px ;
+    background-color : rgb(244,236,194) ;
+    position : fixed;
+    top : 0px;
+    right : -40px;
+    z-index : 1 ;
+    box-shadow: black 1px 1px 1px ;
+}
+
+#sidemenu > div {
+    padding-top : 140px ;
+}
+
+.bounce-in-right {
+    animation: bounce-in-right 2s ease;
+}
+@keyframes bounce-in-right {
+    0% {
+        opacity: 0;
+        transform: translateX(2000px);
+    }
+    60% {
+        opacity: 1 !important;
+        transform: translateX(-30px);
+    }
+    80% { transform: translateX(10px); }
+    100% { transform: translateX(0); }
+}
+
+#sidemenu.bounce-out-right {
+    animation: bounce-out-right 2s ease;
+}
+
+@keyframes bounce-out-right {
+    0% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    20% {
+        opacity : 1;
+        transform: translateX(10px);
+    }
+    40% {
+        opacity : 1 ;
+        transform: translateX(-30px); }
+    100% {
+        opacity: 0;
+        transform: translateX(2000px);
+    }
+}
+
+.hidden {
+    opacity : 0 ;
+}
+
+#castronaut {
+    transform: rotateX(var(--rotate-x, 0deg)) rotateY(var(--rotate-y, 0deg));
+    transform-style: preserve-3d;
+    transition: transform 1.5s cubic-bezier(0.05, 0.5, 0, 1);
+    will-change: transform;
+    display : flex;
+    flex-grow : 1 ;
+    align-self: center ;
+}

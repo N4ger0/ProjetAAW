@@ -5,10 +5,10 @@ const app = express() ;
 
 const path = require('path')
 
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/*', (req,res) => {
-    res.sendFile("./public/index.html", {root: path.join(__dirname)});
+    res.sendFile(path.join(__dirname, 'public', 'views', 'index.html'));
 });
 
 app.listen(port, () => {
