@@ -22,7 +22,6 @@ class Application extends React.Component {
                 <Header></Header>
                 <div id="content">
                     <div id="div_stock">
-                        <img src={"/img/stock.jpg"} alt={""}/>
                         <b> Managez les skills de votre équipe !</b>
                     </div>
                 </div>

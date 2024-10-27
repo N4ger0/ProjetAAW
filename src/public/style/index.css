@@ -9,6 +9,10 @@ html {
     display: flex;
     flex-direction: row;
     align-items: center;
+    box-shadow:
+            0 0 0 3px #ee9b00 ,
+            0 0 0 6px #ca6702 ,
+            0 0 0 9px #ae2012 ;
 }
 
 #logo {
@@ -51,6 +55,7 @@ html {
     right : 0px;
     z-index : 1 ;
     background-color : #e9d8a6 ;
+    box-shadow: 0 0 100px black;
 }
 
 #sidemenu > div {
@@ -86,8 +91,11 @@ html {
         opacity: 1;
         transform: translateX(0);
     }
-    99% {
+    90% {
         opacity: 1;
+    }
+    91% {
+        opacity: 0 ;
     }
     100% {
         opacity: 0;
@@ -96,20 +104,42 @@ html {
 }
 
 #div_stock {
-    position: relative;
-    display: inline-block;
-}
-
-#div_stock img {
-    display: block;
-    width : 100%;
-    height: auto;
+    display: inline-flex;
+    background-image: url("../img/stock.jpg");
+    height : 701px ;
+    width : 100% ;
+    flex-direction: column;
+    justify-content: center;
 }
 
 #div_stock b {
     color : white ;
-    position: absolute;
-    top: 30%;
     font-size: 45px;
     text-align: center;
 }
+
+#menu.cross {
+    transform : translateX(8px);
+}
+
+#menuimg1, #menuimg2, #menuimg3, #menu {
+    transition : all 0.5s ease;
+}
+
+#menu.cross #menuimg1 {
+    transform : rotate(45deg) translate(0, 21px);
+}
+
+#menu.cross #menuimg2 {
+    opacity : 0 !important ;
+    transform : translateX(-8px);
+}
+
+#menu.cross #menuimg3{
+    transform : rotate(-45deg) translate(0, -21px);
+}
+
+#content {
+    padding-top : 15px ;
+}
+

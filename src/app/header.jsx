@@ -24,19 +24,21 @@ let LinkList = ()=>{
 export default class Header extends React.Component {
     menuAnimation() {
         const sidemenu = document.getElementById("sidemenu");
+        const menu = document.getElementById("menu");
         if(sidemenu.classList.contains("hidden")) {
             sidemenu.classList.remove("slide-out-right")
             sidemenu.classList.remove("hidden");
             sidemenu.classList.add("slide-in-right");
+            menu.classList.add("cross");
         } else {
             sidemenu.classList.remove("slide-in-right");
+            menu.classList.remove("cross");
             sidemenu.classList.add("hidden");
             sidemenu.classList.add("slide-out-right");
         }
         //menuImg.classList.remove("gelatine_animate");
-        //void this.menuImg.offsetWidth;  // forces a reflow
+        void menu.offsetWidth;  // forces a reflow
         void sidemenu.offsetWidth;
-        //menuImg.classList.add("gelatine_animate");
 
     }
 
