@@ -6,6 +6,10 @@ import {
     RouterProvider,
   } from "react-router-dom";
 import Header from "./header"
+import dotenv from "dotenv";
+import Authsuccess from "./authsuccess";
+
+dotenv.config();
 
 class Application extends React.Component {
 
@@ -53,6 +57,10 @@ const router = createBrowserRouter([
       path: "/spreedSheet",
       element: <SpreedSheet/>,
     },
+    {
+        path: "/auth/discord/callback",
+        element: <Authsuccess/>,
+    }
   ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(

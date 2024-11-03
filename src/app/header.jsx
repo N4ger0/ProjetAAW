@@ -5,14 +5,12 @@ import {
     Link,
     RouterProvider,
 } from "react-router-dom";
+import Auth from "./auth"
 
 let LinkList = ()=>{
     return <div>
         <nav>
             <ul>
-                <li>
-                    <Link to="/">test</Link>
-                </li>
                 <li>
                     <Link to="/spreedSheet">test2</Link>
                 </li>
@@ -54,6 +52,7 @@ export default class Header extends React.Component {
                     <img src={"/img/menu_stroke.svg"} id="menuimg3" alt=""/>
                 </div>
                 <div id="sidemenu" className="hidden">
+                    <Auth></Auth>
                     <LinkList/>
                 </div>
             </div>
