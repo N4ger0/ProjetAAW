@@ -11,8 +11,10 @@ app.get('/', (req,res) => {
     res.sendFile(path.join(__dirname, 'public', 'views', 'index.html'));
 });
 
-app.get("/auth/discord/callback", (req,res) => {
+app.get('/auth/discord/callback', (req,res) => {
     res.sendFile(path.join(__dirname, 'public', 'views', 'index.html'));
+    code = req.query.code;
+    console.log(code);
 });
 
 app.listen(port, () => {
