@@ -3,6 +3,33 @@ const session = require('express-session')
 require('dotenv').config()
 const axios = require('axios');
 
+const {google} = require('googleapis');
+const sheets = google.sheets('v4');
+const { auth } = new google.auth.GoogleAuth({
+    keyFile: './auth/projetaaw-77a737d72c4d.json',
+    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+});
+
+async function maintest() {
+    console.log(auth.getClient);
+    const authClient = await auth.getClient;
+    google.options({auth: authClient});
+
+    const spreadSheatRes = await sheets.spreadsheets.get({
+        includeGridData: true,
+        ranges: "Sheet1!A1:E6",
+        spreadsheetId: "1BID2_QCGI1BLs6uTN1KADR-FYbG-BEyPmnlgOI0d1kI",
+    });
+
+    console.log(spreadSheatRes.data.values);
+    return spreadSheatRes.data.values;
+}
+
+maintest().catch(e => {
+    console.error(e);
+    throw e;
+});
+
 /*  TODO : refresh token
 import requests
 
