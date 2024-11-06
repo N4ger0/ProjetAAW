@@ -26,7 +26,7 @@ class Application extends React.Component {
                 <Header></Header>
                 <div id="content">
                     <div id="div_stock">
-                        <b> Managez les skills de votre équipe !</b>
+                        <h1> Managez les skills de votre équipe !</h1>
                     </div>
                 </div>
             </div>
