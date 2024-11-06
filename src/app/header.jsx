@@ -12,7 +12,10 @@ let LinkList = ()=>{
         <nav>
             <ul>
                 <li>
-                    <Link to="/spreedSheet">test2</Link>
+                    <Link to="/">Menu</Link>
+                </li>
+                <li>
+                    <Link to="/spreedSheet">Spreadsheet</Link>
                 </li>
             </ul>
         </nav>

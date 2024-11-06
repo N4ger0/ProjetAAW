@@ -34,17 +34,19 @@ class Application extends React.Component {
     }
 }
 
+
 class SpreedSheet extends React.Component {
 
     render() {
         return(
             <div>
+                <Header></Header>
                 <p>Test 2</p>
-                <LinkList/>
             </div>
         )
     }
 }
+
 
 
 
