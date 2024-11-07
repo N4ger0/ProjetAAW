@@ -8,7 +8,7 @@ export default class Auth extends React.Component {
         const responseType = process.env.RESPONSE_TYPE;
         const discordAuthUrl = `https://discord.com/oauth2/authorize?client_id=${clientId}&response_type=${responseType}&redirect_uri=${redirectUri}&scope=${scope}`;
 
-        const width = 500;
+        const width = 600;
         const height = 600;
         const left = (window.innerWidth - width) / 2;
         const top = (window.innerHeight - height) / 2;

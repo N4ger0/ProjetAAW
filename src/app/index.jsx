@@ -5,9 +5,10 @@ import {
     Link,
     RouterProvider,
   } from "react-router-dom";
-import Header from "./header"
+import Header from "./components/header/header"
 import dotenv from "dotenv";
-import Authsuccess from "./authsuccess";
+import Authsuccess from "./components/auth/authsuccess";
+import './index.css'
 
 dotenv.config();
 

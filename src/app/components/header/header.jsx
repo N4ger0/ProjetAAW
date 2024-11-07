@@ -1,11 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import './header.css'
+
 import {
     createBrowserRouter,
     Link,
     RouterProvider,
 } from "react-router-dom";
-import Auth from "./auth"
+import Auth from "../auth/auth"
 
 let LinkList = ()=>{
     return <div>

@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'Milky Vintage';
-    src : url('../fonts/MilkyVintage-Regular.ttf');
+    src : url('../public/fonts/MilkyVintage-Regular.ttf');
 }
 
 
@@ -8,17 +8,6 @@ html {
     background-color : #e9d8a6 ;
     font-family: 'Milky Vintage', serif;
     --header-height: 100px;
-}
-
-#header {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    box-shadow:
-            0 0 0 3px #ee9b00 ,
-            0 0 0 6px #ca6702 ,
-            0 0 0 9px #ae2012 ;
 }
 
 #logo {
@@ -110,7 +99,7 @@ html {
 
 #div_stock {
     display: inline-flex;
-    background-image: url("../img/banner_image.jpg");
+    background-image: url("../public/img/banner_image.jpg");
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -130,6 +119,8 @@ html {
 #menu.cross {
     transform : translateX(8px);
 }
+
+
 
 #menuimg1, #menuimg2, #menuimg3, #menu {
     transition : all 0.5s ease;
