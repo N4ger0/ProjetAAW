@@ -1,0 +1,38 @@
+#authsuccess {
+    align-content: center;
+    padding: 20px;
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+#authsuccess p {
+    margin-top: 10px;
+    font-size: 16px;
+}
+#authsuccess h1 {
+    margin-top: 10px;
+    font-size: 22px;
+}
+
+.loading-animation {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #ccc;
+    border-top: 4px solid #4CAF50; /* Color of the loading spinner */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

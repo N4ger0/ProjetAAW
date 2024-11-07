@@ -5,9 +5,10 @@ import {
     Link,
     RouterProvider,
   } from "react-router-dom";
-import Header from "./header"
+import Header from "./components/header/header"
 import dotenv from "dotenv";
-import Authsuccess from "./authsuccess";
+import Authsuccess from "./components/auth/authsuccess";
+import './index.css'
 
 dotenv.config();
 
@@ -30,7 +31,7 @@ class Application extends React.Component {
                 <Header logged={this.state.logged} setLogged={this.setLogged}></Header>
                 <div id="content">
                     <div id="div_stock">
-                        <b> Managez les skills de votre équipe !</b>
+                        <h1> Managez les skills de votre équipe !</h1>
                     </div>
                 </div>
             </div>

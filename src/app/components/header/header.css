@@ -1,0 +1,8 @@
+#header {
+    width: 100%;
+    align-items: center;
+    box-shadow:
+            0 0 0 3px #ee9b00 ,
+            0 0 0 6px #ca6702 ,
+            0 0 0 9px #ae2012 ;
+}
