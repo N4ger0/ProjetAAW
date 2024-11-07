@@ -24,23 +24,24 @@ export default class Auth extends React.Component {
                  console.log("Popup closed");
                  clearInterval(popupInterval);  // Stop polling
                  //window.location.reload();       // Reload the page
-                 this.props.setLogged(true);
+                 //this.props.setLogged(true);
              }
          }, 500);
     };
 
      render() {
          //Vérifie si un cookie appelé session est set cad si l'utilisateur est connecté
-        if (document.cookie.match(/^(.*;)?\s*session\s*=\s*[^;]+(.*)?$/)) {
-            return null ;
-        } else {
-            return (
-                <button onClick={this.signInWithDiscord}>
-                    <img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/discord-white-icon.png"
+         if (document.cookie.match(/^(.*;)?\s*session\s*=\s*[^;]+(.*)?$/)) {
+             return null;
+         } else {
+             return (
+                 <button onClick={this.signInWithDiscord}>
+                     <img
+                         src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/discord-white-icon.png"
                          alt="Discord"/>
-                    S'authentifier avec Discord
-                </button>
-            )
-        }
+                     S'authentifier avec Discord
+                 </button>
+             )
+         }
      }
 }

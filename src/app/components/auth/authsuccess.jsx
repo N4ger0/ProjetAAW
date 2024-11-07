@@ -6,10 +6,6 @@ export default class Authsuccess extends React.Component {
         window.resizeTo(500, 250);
         document.title = "Authentification Réussie";
 
-        window.addEventListener("close", () => {
-            window.opener.location.reload();
-        });
-
         setTimeout(() => {
             window.close();
         }, 2000);
