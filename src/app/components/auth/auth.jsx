@@ -22,7 +22,11 @@ export default class Auth extends React.Component {
 
     render() {
         return(
-            <button onClick={this.signInWithDiscord}> S'authentifier avec Discord </button>
+            <button onClick={this.signInWithDiscord}>
+                <img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/discord-white-icon.png"
+                     alt="Discord"/>
+                S'authentifier avec Discord
+            </button>
         )
     }
 }

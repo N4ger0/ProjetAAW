@@ -1,9 +1,9 @@
 import React from "react";
-import './auth.css';
+import './authsuccess.css';
 
 export default class Authsuccess extends React.Component {
     componentDidMount() {
-        window.resizeTo(500, 240);
+        window.resizeTo(500, 250);
         document.title = "Authentification Réussie";
 
         window.addEventListener("close", () => {

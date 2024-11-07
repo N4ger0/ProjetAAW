@@ -54,8 +54,8 @@ export default class Header extends React.Component {
                     <img src={"/img/menu_stroke.svg"} id="menuimg3" alt=""/>
                 </div>
                 <div id="sidemenu" className="hidden">
-                    <Auth></Auth>
                     <LinkList/>
+                    <Auth></Auth>
                 </div>
             </div>
         )
