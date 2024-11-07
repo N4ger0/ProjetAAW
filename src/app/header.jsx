@@ -52,7 +52,7 @@ export default class Header extends React.Component {
                     <img src={"/img/menu_stroke.svg"} id="menuimg3" alt=""/>
                 </div>
                 <div id="sidemenu" className="hidden">
-                    <Auth></Auth>
+                    <Auth logged={this.props.logged} setLogged={this.props.setLogged}></Auth>
                     <LinkList/>
                 </div>
             </div>

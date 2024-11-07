@@ -16,14 +16,18 @@ class Application extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            events: [],
+            logged : false
         }
+    }
+
+    setLogged = (value) => {
+        this.setState({ logged: value });
     }
 
     render() {
         return(
             <div>
-                <Header></Header>
+                <Header logged={this.state.logged} setLogged={this.setLogged}></Header>
                 <div id="content">
                     <div id="div_stock">
                         <b> Managez les skills de votre équipe !</b>

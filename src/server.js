@@ -1,27 +1,7 @@
 const express = require("express") ;
-const session = require('express-session')
+const cookieSession = require('cookie-session')
 require('dotenv').config()
 const axios = require('axios');
-
-/*  TODO : refresh token
-import requests
-
-API_ENDPOINT = 'https://discord.com/api/v10'
-CLIENT_ID = '332269999912132097'
-CLIENT_SECRET = '937it3ow87i4ery69876wqire'
-
-def refresh_token(refresh_token):
-  data = {
-    'grant_type': 'refresh_token',
-    'refresh_token': refresh_token
-  }
-  headers = {
-    'Content-Type': 'application/x-www-form-urlencoded'
-  }
-  r = requests.post('%s/oauth2/token' % API_ENDPOINT, data=data, headers=headers, auth=(CLIENT_ID, CLIENT_SECRET))
-  r.raise_for_status()
-  return r.json()
- */
 
 const port = 3000 ;
 const app = express() ;
@@ -29,20 +9,33 @@ const app = express() ;
 const path = require('path');
 const {redirect} = require("react-router-dom");
 
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
+
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({
-    secret: process.env.SESSION_SECRET ,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true }
+app.use(cookieSession({
+    keys: [process.env.SESSION_SECRET ],
+    secure: false,
+    httpOnly: false,
+    sameSite: 'lax',
+    domain: 'localhost'
 }))
 
 app.get('/', (req,res) => {
     res.sendFile(path.join(__dirname, 'public', 'views', 'index.html'));
 });
 
+app.get('/api/getName', async (req, res) => {
+    //console.log(req.session);
+    let response = await axios.get("https://discord.com/api/users/@me", {
+        headers: {
+            Authorization: `Bearer ${req.session.access_token}`
+        }
+    })
+    console.log(response.data)
+})
+
 app.get('/auth/discord/callback', async (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'views', 'index.html'));
     console.log(process.env.CLIENT_ID );
     console.log(process.env.CLIENT_SECRET );
     let code = req.query.code;
@@ -70,6 +63,8 @@ app.get('/auth/discord/callback', async (req, res) => {
 
         console.log(req.session);
     }
+
+    res.sendFile(path.join(__dirname, 'public', 'views', 'index.html'));
 });
 
 app.listen(port, () => {

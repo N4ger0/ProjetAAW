@@ -18,11 +18,25 @@ export default class Auth extends React.Component {
             '_blank',
             `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes,status=yes`
         );
+
+         const popupInterval = setInterval(() => {
+             if (popup.closed) {
+                 console.log("Popup closed");
+                 clearInterval(popupInterval);  // Stop polling
+                 //window.location.reload();       // Reload the page
+                 this.props.setLogged(true);
+             }
+         }, 500);
     };
 
-    render() {
-        return(
-            <button onClick={this.signInWithDiscord}> S'authentifier avec Discord </button>
-        )
+     render() {
+         //Vérifie si un cookie appelé session est set cad si l'utilisateur est connecté
+        if (document.cookie.match(/^(.*;)?\s*session\s*=\s*[^;]+(.*)?$/)) {
+            return null ;
+        } else {
+            return (
+                <button onClick={this.signInWithDiscord}> S'authentifier avec Discord </button>
+            )
+        }
     }
 }
