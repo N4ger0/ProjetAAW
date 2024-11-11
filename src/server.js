@@ -55,8 +55,7 @@ async function updateSheetData(spreadsheetId, range, values) {
     }
 }
 
-// Lire les données
-readSheetData(SPREADSHEET_ID, 'Sheet1!A1:B10').then(data => {
+readSheetData(SPREADSHEET_ID, 'Sheet1!A1:E6').then(data => {
     console.log("Données lues :", data);
 });
 
@@ -91,6 +90,10 @@ app.use(session({
 app.get('/', (req,res) => {
     res.sendFile(path.join(__dirname, 'public', 'views', 'index.html'));
 });
+
+app.get('/getSpreedSheetData', (req,res) => {
+    res.json(readSheetData(SPREADSHEET_ID, 'Sheet1!A1:E6').data);
+})
 
 app.get('/auth/discord/callback', async (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'views', 'index.html'));

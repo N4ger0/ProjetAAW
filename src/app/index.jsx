@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
 import {
     createBrowserRouter,
@@ -36,12 +36,43 @@ class Application extends React.Component {
 
 
 class SpreedSheet extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+          data: []
+        };
+    }
+
+    componentDidMount() {
+        fetch("http://localhost:3000/getSpreedSheetData")
+            .then((response) => response.json())
+            .then((data) => this.setState({ data }))
+            .catch((error) => console.error("Erreur lors de la récupération des données :", error));
+    }
 
     render() {
+        const { data } = this.state;
+        
         return(
             <div>
                 <Header></Header>
-                <p>Test 2</p>
+                <table border="1">
+                  <thead>
+                    <tr>
+                      <th>Jeu</th>
+                      <th>Note</th>
+                      <th>Avis</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.map((row, index) => (
+                      <tr key={index}>
+                        <td>{row[0]}</td>
+                        <td>{row[1]}</td>
+                        <td>{row[2]}</td>
+                      </tr>))}
+                 </tbody>
+                </table>
             </div>
         )
     }
@@ -52,12 +83,12 @@ class SpreedSheet extends React.Component {
 
 const router = createBrowserRouter([
     {
-      path: "/",
-      element: <Application />,
+        path: "/",
+        element: <Application />,
     },
     {
-      path: "/spreedSheet",
-      element: <SpreedSheet/>,
+        path: "/spreedSheet",
+        element: <SpreedSheet/>,
     },
     {
         path: "/auth/discord/callback",
