@@ -1,51 +1,76 @@
 @font-face {
     font-family: 'Milky Vintage';
-    src : url('../public/fonts/MilkyVintage-Regular.ttf');
+    src: url('../public/fonts/MilkyVintage-Regular.ttf');
 }
 
 @font-face {
     font-family: 'Poppins';
-    src : url('../public/fonts/Poppins-Regular.ttf');
+    src: url('../public/fonts/Poppins-Regular.ttf');
 }
 
-
+/* Global and HTML styling */
 html {
-    background-color : #e9d8a6 ;
+    background-color: #e9d8a6;
     font-family: 'Poppins', serif;
     --header-height: 100px;
 }
 
+#root {
+    height: 100%;
+    width: 100%;
+}
+
+/* Logo */
 #logo {
-    height : var(--header-height);
-    flex-grow : 1 ;
+    height: var(--header-height);
+    flex-grow: 1;
 }
 
 #logo img {
-    height : inherit;
+    height: inherit;
 }
 
-#menu img {
-    margin : -5px ;
-}
-
+/* Menu Icon */
 #menu {
-    width : 60px ;
-    display : flex ;
-    align-content : center;
+    width: 60px;
+    display: flex;
+    align-content: center;
     align-items: center;
-    flex-direction : column ;
-    cursor : pointer;
+    flex-direction: column;
+    cursor: pointer;
     position: absolute;
     z-index: 2;
     top: 35px;
     right: 37px;
+    transition: all 0.5s ease;
 }
 
-#root {
-    height : 100% ;
-    width : 100% ;
+#menu img {
+    margin: -5px;
 }
 
+#menu.cross {
+    transform: translateX(8px);
+}
+
+#menuimg1, #menuimg2, #menuimg3 {
+    transition: all 0.5s ease;
+}
+
+#menu.cross #menuimg1 {
+    transform: rotate(45deg) translate(0, 21px);
+}
+
+#menu.cross #menuimg2 {
+    opacity: 0 !important;
+    transform: translateX(-8px);
+}
+
+#menu.cross #menuimg3 {
+    transform: rotate(-45deg) translate(0, -21px);
+}
+
+/* Sidebar menu styling */
 #sidemenu {
     height: 100%;
     width: 200px;
@@ -57,16 +82,15 @@ html {
     box-shadow: 0 0 100px black;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centers content horizontally */
+    align-items: center;
 }
 
 #sidemenu > div {
-    padding-top: 0; /* Remove padding to help center items */
+    padding-top: 140px;
 }
 
-#sidemenu button {
-    background-color: #5865F2; /* Discord blue */
-    color: white;
+/* Shared button styles */
+#sidemenu button, #sidemenu > #signInDiscord {
     font-family: 'Poppins', serif;
     font-size: 12px;
     padding: 12px 24px;
@@ -76,36 +100,54 @@ html {
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
     transition: background-color 0.3s ease, transform 0.2s ease;
     margin: 10px 0;
-    width: 80%;
+    width: 130px;
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px; /* Space between icon and text */
+    gap: 10px;
 }
 
-#sidemenu button:hover {
-    background-color: #4752C4; /* Slightly darker Discord blue for hover */
+/* Discord Sign-In button styles */
+#signInDiscord {
+    background-color: #5865F2;
+    color: white;
+}
+
+#signInDiscord.connected {
+    background-color: #3ba55d;
+}
+
+
+#sidemenu > #signInDiscord:hover,
+#sidemenu > #signInDiscord.connected:hover {
     transform: scale(1.05);
 }
 
-#sidemenu button img {
-    height: 20px; /* Size of the Discord logo */
+#signInDiscord.connected:hover {
+    background-color: #2f8a48;
+}
+
+#sidemenu button:hover {
+    background-color: #4752C4;
+}
+
+/* Discord button icon */
+.icon {
+    height: 20px;
     width: 20px;
 }
 
+/* Animation Classes */
 .hidden {
-    opacity : 0 ;
-}
-
-#sidemenu > div {
-    padding-top : 140px ;
+    opacity: 0;
 }
 
 .slide-in-right {
     animation: bounce-in-right 1s ease;
-    opacity : 1 !important ;
+    opacity: 1 !important;
 }
+
 @keyframes bounce-in-right {
     0% {
         transform: translateX(200px);
@@ -114,8 +156,9 @@ html {
         opacity: 1 !important;
     }
     100% {
-        opacity : 1 !important;
-        transform: translateX(0); }
+        opacity: 1 !important;
+        transform: translateX(0);
+    }
 }
 
 #sidemenu.slide-out-right {
@@ -131,7 +174,7 @@ html {
         opacity: 1;
     }
     91% {
-        opacity: 0 ;
+        opacity: 0;
     }
     100% {
         opacity: 0;
@@ -139,47 +182,27 @@ html {
     }
 }
 
+/* Banner Section */
 #div_stock {
     display: inline-flex;
     background-image: url("../public/img/banner_image.jpg");
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-    width : 100% ;
-    height : 800px ;
+    width: 100%;
+    height: 800px;
     flex-direction: column;
     justify-content: center;
 }
 
 #div_stock h1 {
-    color : white ;
+    color: white;
     font-size: 65px;
     text-align: center;
     text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
 }
 
-#menu.cross {
-    transform : translateX(8px);
-}
-
-#menuimg1, #menuimg2, #menuimg3, #menu {
-    transition : all 0.5s ease;
-}
-
-#menu.cross #menuimg1 {
-    transform : rotate(45deg) translate(0, 21px);
-}
-
-#menu.cross #menuimg2 {
-    opacity : 0 !important ;
-    transform : translateX(-8px);
-}
-
-#menu.cross #menuimg3{
-    transform : rotate(-45deg) translate(0, -21px);
-}
-
+/* Content section */
 #content {
-    padding-top : 15px ;
+    padding-top: 15px;
 }
-

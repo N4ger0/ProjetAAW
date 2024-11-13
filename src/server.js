@@ -32,7 +32,7 @@ app.get('/api/getName', async (req, res) => {
             Authorization: `Bearer ${req.session.access_token}`
         }
     })
-    console.log(response.data)
+    console.log(response.data);
 })
 
 app.get('/auth/discord/callback', async (req, res) => {
@@ -46,7 +46,7 @@ app.get('/auth/discord/callback', async (req, res) => {
 
     const response = await axios.post(
         "https://discord.com/api/oauth2/token",
-        `client_id=${process.env.CLIENT_ID }&client_secret=${process.env.CLIENT_SECRET }&grant_type=client_credentials&code=${code.toString()}&redirect_uri=${encodeURI("http://localhost:3000")}&scope=identify`,
+        `client_id=${process.env.CLIENT_ID }&client_secret=${process.env.CLIENT_SECRET }&grant_type=authorization_code&code=${code.toString()}&redirect_uri=${process.env.REDIRECT_URI}&scope=identify`,
         {
             headers
         }
