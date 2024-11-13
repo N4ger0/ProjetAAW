@@ -48,7 +48,7 @@ export default class SpreadSheet extends React.Component {
               <tbody>
                 {skills.map((row, index) => (
                   <tr key={index}>
-                    <td>{row[0]}</td>
+                    <td><a href={"https://localhost:3000/spreadsheet/"+row[0].replace(' ','_')} >{row[0]}</a></td>
                     <td>{row[1]}</td>
                     <td>{row[2]}</td>
                   </tr>
