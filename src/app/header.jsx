@@ -1,9 +1,6 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import {
-    createBrowserRouter,
     Link,
-    RouterProvider,
 } from "react-router-dom";
 import Auth from "./auth"
 

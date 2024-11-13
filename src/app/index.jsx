@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
 import {
     createBrowserRouter,
-    Link,
     RouterProvider,
   } from "react-router-dom";
 import Header from "./header"
 import dotenv from "dotenv";
 import Authsuccess from "./authsuccess";
+import SpreadSheet from "./spreadsheet";
 
 dotenv.config();
 
@@ -34,53 +34,6 @@ class Application extends React.Component {
     }
 }
 
-
-class SpreedSheet extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-          data: []
-        };
-    }
-
-    componentDidMount() {
-        fetch("http://localhost:3000/getSpreedSheetData")
-            .then((response) => response.json())
-            .then((data) => this.setState({ data }))
-            .catch((error) => console.error("Erreur lors de la récupération des données :", error));
-    }
-
-    render() {
-        const { data } = this.state;
-        
-        return(
-            <div>
-                <Header></Header>
-                <table border="1">
-                  <thead>
-                    <tr>
-                      <th>Jeu</th>
-                      <th>Note</th>
-                      <th>Avis</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.map((row, index) => (
-                      <tr key={index}>
-                        <td>{row[0]}</td>
-                        <td>{row[1]}</td>
-                        <td>{row[2]}</td>
-                      </tr>))}
-                 </tbody>
-                </table>
-            </div>
-        )
-    }
-}
-
-
-
-
 const router = createBrowserRouter([
     {
         path: "/",
@@ -88,7 +41,7 @@ const router = createBrowserRouter([
     },
     {
         path: "/spreedSheet",
-        element: <SpreedSheet/>,
+        element: <SpreadSheet/>,
     },
     {
         path: "/auth/discord/callback",

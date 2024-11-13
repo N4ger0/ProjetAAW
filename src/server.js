@@ -26,9 +26,8 @@ async function readSheetData(spreadsheetId, range) {
 
         const res = await sheets.spreadsheets.values.get({
             spreadsheetId: spreadsheetId,
-            range: range, // Par exemple, 'Sheet1!A1:B10'
+            range: range,
         });
-        console.log(res.data.values);
         return res.data.values;
     } catch (error) {
         console.error("Erreur lors de la lecture des données :", error);
@@ -54,10 +53,6 @@ async function updateSheetData(spreadsheetId, range, values) {
         console.error("Erreur lors de la mise à jour des données :", error);
     }
 }
-
-readSheetData(SPREADSHEET_ID, 'Sheet1!A1:E6').then(data => {
-    console.log("Données lues :", data);
-});
 
 /*  TODO : refresh token
 import requests
@@ -87,12 +82,9 @@ app.use(session({
     cookie: { secure: true }
 }))
 
-app.get('/', (req,res) => {
-    res.sendFile(path.join(__dirname, 'public', 'views', 'index.html'));
-});
-
-app.get('/getSpreedSheetData', (req,res) => {
-    res.json(readSheetData(SPREADSHEET_ID, 'Sheet1!A1:E6').data);
+app.get('/api/spreadsheet', async (req,res) => {
+    const data = await readSheetData(SPREADSHEET_ID, 'Sheet1!A1:E6');
+    res.json(data);
 })
 
 app.get('/auth/discord/callback', async (req, res) => {
@@ -124,6 +116,10 @@ app.get('/auth/discord/callback', async (req, res) => {
 
         console.log(req.session);
     }
+});
+
+app.get('/*', (req,res) => {
+    res.sendFile(path.join(__dirname, 'public', 'views', 'index.html'));
 });
 
 app.listen(port, () => {
