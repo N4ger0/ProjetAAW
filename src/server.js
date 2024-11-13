@@ -33,7 +33,41 @@ app.get('/api/getName', async (req, res) => {
         }
     })
     console.log(response.data);
+
+    res.send(response.data.global_name);
 })
+
+app.get('/api/getUserInfo', async (req, res) => {
+    try {
+        // Ensure the user is authenticated
+        if (!req.session.access_token) {
+            return res.status(401).send('Unauthorized: No access token');
+        }
+
+        // Fetch user data from Discord API
+        let response = await axios.get("https://discord.com/api/users/@me", {
+            headers: {
+                Authorization: `Bearer ${req.session.access_token}`
+            }
+        });
+
+        const userData = response.data;
+
+        // Construct the avatar URL
+        const avatarUrl = userData.avatar
+            ? `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png`
+            : `https://cdn.discordapp.com/embed/avatars/${userData.discriminator % 5}.png`; // Fallback URL
+
+        // Send the global_name and avatar URL in the response
+        res.json({
+            global_name: userData.global_name,
+            avatarUrl: avatarUrl
+        });
+    } catch (error) {
+        console.error("Error fetching user info:", error.response?.data || error.message);
+        res.status(500).send('Error fetching user info');
+    }
+});
 
 app.get('/auth/discord/callback', async (req, res) => {
     console.log(process.env.CLIENT_ID );

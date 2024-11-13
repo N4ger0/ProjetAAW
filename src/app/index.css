@@ -138,6 +138,12 @@ html {
     width: 20px;
 }
 
+.rounded_icon {
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+}
+
 /* Animation Classes */
 .hidden {
     opacity: 0;
