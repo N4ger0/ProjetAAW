@@ -25,7 +25,7 @@ app.use(cookieSession({
 app.use(expressCspHeader({
     directives: {
         'default-src': [SELF],
-        'script-src': ["http://localhost:1234", 'unsafe-eval'],
+        'script-src': ["http://localhost:1234", "'unsafe-eval'"],
         'style-src': ['http://localhost:1234'],
         'img-src': ['*'],
         'font-src' : ['*']

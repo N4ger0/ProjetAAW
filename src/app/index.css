@@ -212,3 +212,12 @@ html {
 #content {
     padding-top: 15px;
 }
+
+#div_first_text {
+    align-content: center;
+    text-align: center;
+    color : #bb3e03 ;
+    font-size : 30px ;
+    padding-top : 20px ;
+    padding-bottom : 20px ;
+}
