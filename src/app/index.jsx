@@ -2,13 +2,14 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import {
     createBrowserRouter,
-    Link,
     RouterProvider,
   } from "react-router-dom";
 import Header from "./components/header/header"
 import dotenv from "dotenv";
 import Authsuccess from "./components/auth/authsuccess";
 import './index.css'
+import SpreadSheet from "./spreadsheet";
+import SpreadSheetLink from "./spreasheetLink";
 
 dotenv.config();
 
@@ -43,32 +44,22 @@ class Application extends React.Component {
     }
 }
 
-class SpreedSheet extends React.Component {
-
-    render() {
-        return(
-            <div>
-                <p>Test 2</p>
-                <LinkList/>
-            </div>
-        )
-    }
-}
-
-
-
 const router = createBrowserRouter([
     {
-      path: "/",
-      element: <Application />,
+        path: "/",
+        element: <Application />,
     },
     {
-      path: "/spreedSheet",
-      element: <SpreedSheet/>,
+        path: "/spreedSheet",
+        element: <SpreadSheet/>,
     },
     {
         path: "/auth/discord/callback",
         element: <Authsuccess/>,
+    },
+    {
+        path: "/spreedSheet/:name",
+        element: <SpreadSheetLink/>,
     }
   ]);
 

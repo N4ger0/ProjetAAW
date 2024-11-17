@@ -3,9 +3,7 @@ import ReactDOM from "react-dom";
 import './header.css'
 
 import {
-    createBrowserRouter,
     Link,
-    RouterProvider,
 } from "react-router-dom";
 import Auth from "../auth/auth"
 
@@ -14,7 +12,10 @@ let LinkList = ()=>{
         <nav>
             <ul>
                 <li>
-                    <Link to="/spreedSheet">test2</Link>
+                    <Link to="/">Menu</Link>
+                </li>
+                <li>
+                    <Link to="/spreedSheet">Spreadsheet</Link>
                 </li>
             </ul>
         </nav>
