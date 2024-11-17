@@ -1,5 +1,6 @@
 import React from "react";
 import Header from "./header";
+import {Link} from "react-router-dom";
 
 export default class SpreadSheet extends React.Component {
     constructor(props) {
@@ -48,7 +49,7 @@ export default class SpreadSheet extends React.Component {
               <tbody>
                 {skills.map((row, index) => (
                   <tr key={index}>
-                    <td><a href={"https://localhost:3000/spreadsheet/"+row[0].replace(' ','_')} >{row[0]}</a></td>
+                    <td> <Link to={"/spreedSheet/"+row[0].replaceAll(' ','_')} > {row[0]} </Link> </td> 
                     <td>{row[1]}</td>
                     <td>{row[2]}</td>
                   </tr>

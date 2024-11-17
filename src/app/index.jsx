@@ -8,6 +8,7 @@ import Header from "./header"
 import dotenv from "dotenv";
 import Authsuccess from "./authsuccess";
 import SpreadSheet from "./spreadsheet";
+import SpreadSheetLink from "./spreasheetLink";
 
 dotenv.config();
 
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
     {
         path: "/auth/discord/callback",
         element: <Authsuccess/>,
+    },
+    {
+        path: "/spreedSheet/:name",
+        element: <SpreadSheetLink/>,
     }
   ]);
 

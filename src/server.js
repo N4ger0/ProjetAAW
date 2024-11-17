@@ -87,6 +87,14 @@ app.get('/api/spreadsheet', async (req,res) => {
     res.json(data);
 })
 
+app.get('/api/spreadsheet/:name', async (req,res) => {
+    const { name }= (req.params);
+    nameInArray = name.replaceAll('_',' ');
+    const rawData = await readSheetData(SPREADSHEET_ID, 'Sheet1!A1:E6');
+    const data = rawData.filter(item => item[0] === nameInArray);
+    res.json(data);
+})
+
 app.get('/auth/discord/callback', async (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'views', 'index.html'));
     console.log(process.env.CLIENT_ID );
