@@ -8,17 +8,11 @@ import {
 import Auth from "../auth/auth"
 
 let LinkList = ()=>{
-    return <div>
-        <nav>
-            <ul>
-                <li>
-                    <Link to="/">Menu</Link>
-                </li>
-                <li>
-                    <Link to="/spreedSheet">Spreadsheet</Link>
-                </li>
-            </ul>
-        </nav>
+    return <div id={"linklist"}>
+        <Link to="/">Menu</Link>
+        <p/>
+        <Link to="/spreedSheet">Spreadsheet</Link>
+        <p/>
     </div>;
 }
 

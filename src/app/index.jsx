@@ -8,8 +8,8 @@ import Header from "./components/header/header"
 import dotenv from "dotenv";
 import Authsuccess from "./components/auth/authsuccess";
 import './index.css'
-import SpreadSheet from "./spreadsheet";
-import SpreadSheetLink from "./spreasheetLink";
+import SpreadSheet from "./components/spreadsheet/spreadsheet";
+import SpreadSheetLink from "./components/spreadsheet/spreasheetLink";
 
 dotenv.config();
 
@@ -58,7 +58,7 @@ const router = createBrowserRouter([
         element: <Authsuccess/>,
     },
     {
-        path: "/spreedSheet/:name",
+        path: "/spreedSheet/:name/:note",
         element: <SpreadSheetLink/>,
     }
   ]);

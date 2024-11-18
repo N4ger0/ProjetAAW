@@ -1,0 +1,39 @@
+table, caption, tbody, tfoot, thead, tr, th, td {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+    border-collapse: collapse;
+}
+
+thead {
+    background-color: #bb3e03 ;
+    color : #ffffff;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+
+th, td {
+    padding: 12px 15px;
+}
+
+tbody tr {
+    border-bottom: 1px solid #bb3e03;
+}
+
+table {
+    border: 1px solid #bb3e03;
+}
+
+tbody tr:last-of-type {
+    border-bottom: 2px solid #bb3e03;
+}
+
+tbody tr:hover {
+    color: #bb3e03;
+    background-color : #e6d2a3;
+}

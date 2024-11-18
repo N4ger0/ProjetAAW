@@ -3,3 +3,171 @@
     align-items: center;
     box-shadow: 0 3px 0 #ee9b00, 0 6px 0 #ca6702, 0 9px 0 #ae2012;
 }
+
+/* Animation Classes */
+.hidden {
+    opacity: 0;
+}
+
+.slide-in-right {
+    animation: bounce-in-right 1s ease;
+    opacity: 1 !important;
+}
+
+@keyframes bounce-in-right {
+    0% {
+        transform: translateX(200px);
+    }
+    1% {
+        opacity: 1 !important;
+    }
+    100% {
+        opacity: 1 !important;
+        transform: translateX(0);
+    }
+}
+
+#sidemenu.slide-out-right {
+    animation: bounce-out-right 1s ease;
+}
+
+@keyframes bounce-out-right {
+    0% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    90% {
+        opacity: 1;
+    }
+    91% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(200px);
+    }
+}
+
+/* Discord button icon */
+.icon {
+    height: 20px;
+    width: 20px;
+}
+
+.rounded_icon {
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+}
+
+#signInDiscord.connected {
+    background-color: #3ba55d;
+}
+
+
+#sidemenu > #signInDiscord:hover,
+#sidemenu > #signInDiscord.connected:hover {
+    transform: scale(1.05);
+}
+
+#signInDiscord.connected:hover {
+    background-color: #2f8a48;
+}
+
+#sidemenu button:hover {
+    background-color: #4752C4;
+}
+
+/* Discord Sign-In button styles */
+#signInDiscord {
+    background-color: #5865F2;
+    color: white;
+}
+
+/* Shared button styles */
+#sidemenu button, #sidemenu > #signInDiscord {
+    font-family: 'Poppins', serif;
+    font-size: 12px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin: 10px 0;
+    width: 130px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Sidebar menu styling */
+#sidemenu {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 1;
+    background-color: #e9d8a6;
+    box-shadow: 0 0 100px black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#sidemenu > div {
+    padding-top: 140px;
+}
+
+#menu img {
+    margin: -5px;
+}
+
+#menu.cross {
+    transform: translateX(8px);
+}
+
+#menuimg1, #menuimg2, #menuimg3 {
+    transition: all 0.5s ease;
+}
+
+#menu.cross #menuimg1 {
+    transform: rotate(45deg) translate(0, 21px);
+}
+
+#menu.cross #menuimg2 {
+    opacity: 0 !important;
+    transform: translateX(-8px);
+}
+
+#menu.cross #menuimg3 {
+    transform: rotate(-45deg) translate(0, -21px);
+}
+
+/* Logo */
+#logo {
+    height: var(--header-height);
+    flex-grow: 1;
+}
+
+#logo img {
+    height: inherit;
+}
+
+/* Menu Icon */
+#menu {
+    width: 60px;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    flex-direction: column;
+    cursor: pointer;
+    position: absolute;
+    z-index: 2;
+    top: 35px;
+    right: 37px;
+    transition: all 0.5s ease;
+}

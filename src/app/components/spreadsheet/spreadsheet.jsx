@@ -1,6 +1,7 @@
 import React from "react";
-import Header from "./components/header/header";
+import Header from "../header/header";
 import {Link} from "react-router-dom";
+import "./spreadsheet.css"
 
 export default class SpreadSheet extends React.Component {
     constructor(props) {
@@ -34,29 +35,31 @@ export default class SpreadSheet extends React.Component {
   
       return (
         <div>
-          <Header />
-          {loading ? (
-            <p>Chargement des données...</p>
-          ) : (
-            <table border="1">
-              <thead>
-                <tr>
-                  <th>Jeu</th>
-                  <th>Note</th>
-                  <th>Avis</th>
-                </tr>
-              </thead>
-              <tbody>
-                {skills.map((row, index) => (
-                  <tr key={index}>
-                    <td> <Link to={"/spreedSheet/"+row[0].replaceAll(' ','_')} > {row[0]} </Link> </td> 
-                    <td>{row[1]}</td>
-                    <td>{row[2]}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
+          <Header/>
+            <div id={"content"}>
+            {loading ? (
+                <p>Chargement des données...</p>
+            ) : (
+                <table border="1">
+                <thead>
+                    <tr>
+                    <th>Jeu</th>
+                    <th>Note</th>
+                    <th>Avis</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {skills.map((row, index) => (
+                    <tr key={index}>
+                        <td> <Link to={"/spreedSheet/"+row[0].replaceAll(' ','_') + "/" + row[1]} > {row[0]} </Link> </td>
+                        <td>{row[1]}</td>
+                        <td>{row[2]}</td>
+                    </tr>
+                    ))}
+                </tbody>
+                </table>
+            )}
+            </div>
         </div>
       );
     }
