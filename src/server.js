@@ -14,6 +14,25 @@ const app = express() ;
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieSession({
+    keys: [process.env.SESSION_SECRET],
+    secure: false,
+    httpOnly: false,
+    sameSite: 'lax',
+    domain: 'localhost'
+}))
+
+app.use(expressCspHeader({
+    directives: {
+        'default-src': [SELF],
+        'script-src': ["http://localhost:1234", "'unsafe-eval'"],
+        'style-src': ['http://localhost:1234'],
+        'img-src': ['*'],
+        'font-src' : ['*']
+    }
+}));
+
 const SPREADSHEET_ID = '1BID2_QCGI1BLs6uTN1KADR-FYbG-BEyPmnlgOI0d1kI';
 const keyFilePath = path.join(__dirname, 'auth', 'credential.json');
 
@@ -57,26 +76,6 @@ async function updateSheetData(spreadsheetId, range, values) {
         console.error("Erreur lors de la mise à jour des données :", error);
     }
 }
-
-
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(cookieSession({
-    keys: [process.env.SESSION_SECRET],
-    secure: false,
-    httpOnly: false,
-    sameSite: 'lax',
-    domain: 'localhost'
-}))
-
-app.use(expressCspHeader({
-    directives: {
-        'default-src': [SELF],
-        'script-src': ["http://localhost:1234", "'unsafe-eval'"],
-        'style-src': ['http://localhost:1234'],
-        'img-src': ['*'],
-        'font-src' : ['*']
-    }
-}));
 
 app.get('/api/spreadsheet', async (req,res) => {
     const data = await readSheetData(SPREADSHEET_ID, 'Sheet1!A1:E6');
@@ -165,10 +164,6 @@ app.get('/auth/discord/callback', async (req, res) => {
         console.log(req.session);
     }
 
-    res.sendFile(path.join(__dirname, 'public', 'views', 'index.html'));
-});
-
-app.get('/*', (req,res) => {
     res.sendFile(path.join(__dirname, 'public', 'views', 'index.html'));
 });
 

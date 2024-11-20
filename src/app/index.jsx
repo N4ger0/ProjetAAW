@@ -10,6 +10,7 @@ import Authsuccess from "./components/auth/authsuccess";
 import './index.css'
 import SpreadSheet from "./components/spreadsheet/spreadsheet";
 import SpreadSheetLink from "./components/spreadsheet/spreasheetLink";
+import PageNotFound from "./components/not_found/PageNotFound"
 
 dotenv.config();
 
@@ -60,6 +61,10 @@ const router = createBrowserRouter([
     {
         path: "/spreedSheet/:name/:note",
         element: <SpreadSheetLink/>,
+    },
+    {
+        path: "*",
+        element: <PageNotFound/>
     }
   ]);
 
