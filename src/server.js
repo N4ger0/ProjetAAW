@@ -14,7 +14,6 @@ const app = express() ;
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
-const SPREADSHEET_ID = '1BID2_QCGI1BLs6uTN1KADR-FYbG-BEyPmnlgOI0d1kI';
 const keyFilePath = path.join(__dirname, 'auth', 'credential.json');
 
 // Utilise le chemin relatif vers ton fichier de clés JSON
@@ -79,14 +78,14 @@ app.use(expressCspHeader({
 }));
 
 app.get('/api/spreadsheet', async (req,res) => {
-    const data = await readSheetData(SPREADSHEET_ID, 'Sheet1!A1:E6');
+    const data = await readSheetData(process.env.SPREADSHEET_ID, 'Remplissage skills!A2:Z100');
     res.json(data);
 })
 
 app.get('/api/spreadsheet/:name', async (req,res) => {
     const { name }= (req.params);
     nameInArray = name.replaceAll('_',' ');
-    const rawData = await readSheetData(SPREADSHEET_ID, 'Sheet1!A1:E6');
+    const rawData = await readSheetData(process.env.SPREADSHEET_ID, 'Remplissage skills!A2:Z100');
     const data = rawData.filter(item => item[0] === nameInArray);
     res.json(data);
 })
@@ -165,10 +164,6 @@ app.get('/auth/discord/callback', async (req, res) => {
         console.log(req.session);
     }
 
-    res.sendFile(path.join(__dirname, 'public', 'views', 'index.html'));
-});
-
-app.get('/*', (req,res) => {
     res.sendFile(path.join(__dirname, 'public', 'views', 'index.html'));
 });
 
