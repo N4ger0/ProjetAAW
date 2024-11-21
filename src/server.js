@@ -78,14 +78,14 @@ async function updateSheetData(spreadsheetId, range, values) {
 }
 
 app.get('/api/spreadsheet', async (req,res) => {
-    const data = await readSheetData(SPREADSHEET_ID, 'Sheet1!A1:E6');
+    const data = await readSheetData(process.env.SPREADSHEET_ID, 'Remplissage skills!A2:Z100');
     res.json(data);
 })
 
 app.get('/api/spreadsheet/:name', async (req,res) => {
     const { name }= (req.params);
     nameInArray = name.replaceAll('_',' ');
-    const rawData = await readSheetData(SPREADSHEET_ID, 'Sheet1!A1:E6');
+    const rawData = await readSheetData(process.env.SPREADSHEET_ID, 'Remplissage skills!A2:Z100');
     const data = rawData.filter(item => item[0] === nameInArray);
     res.json(data);
 })

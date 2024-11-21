@@ -59,7 +59,7 @@ const router = createBrowserRouter([
         element: <Authsuccess/>,
     },
     {
-        path: "/spreedSheet/:name/:note",
+        path: "/spreedSheet/:name",
         element: <SpreadSheetLink/>,
     },
     {
