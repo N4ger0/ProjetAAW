@@ -12,8 +12,9 @@ const port = 3000 ;
 const app = express() ;
 
 const cookieParser = require('cookie-parser');
+const { ok } = require("assert");
+app.use(express.json());
 app.use(cookieParser());
-
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieSession({
     keys: [process.env.SESSION_SECRET],
@@ -29,7 +30,8 @@ app.use(expressCspHeader({
         'script-src': ["http://localhost:1234", "'unsafe-eval'"],
         'style-src': ['http://localhost:1234'],
         'img-src': ['*'],
-        'font-src' : ['*']
+        'font-src' : ['*'],
+        'connect-src' : ['http://localhost:1234', 'ws://localhost:3000/' , SELF]
     }
 }));
 
@@ -70,7 +72,7 @@ async function updateSheetData(spreadsheetId, range, values) {
                 values: values, // Par exemple, [[ "Nouvelle Valeur" ]]
             },
         });
-        console.log(`Mise à jour : ${res.data.updatedCells} cellules mises à jour`);
+        //console.log(`Mise à jour : ${res.data.updatedCells} cellules mises à jour`);
         return res.data;
     } catch (error) {
         console.error("Erreur lors de la mise à jour des données :", error);
@@ -88,6 +90,26 @@ app.get('/api/spreadsheet/:name', async (req,res) => {
     const rawData = await readSheetData(process.env.SPREADSHEET_ID, 'Remplissage skills!A2:Z100');
     const data = rawData.filter(item => item[0] === nameInArray);
     res.json(data);
+})
+
+app.post('/api/spreadsheet/change',async (req, res) => {
+    const {discord_id, name, aaw, coo, cuisine, sportif, majeur} = req.body;
+    const rawData = await readSheetData(process.env.SPREADSHEET_ID, 'Remplissage skills!A1:Z100');
+    const dataIndex = rawData.findIndex((row, index) => row[1] === discord_id) + 1;
+    if(dataIndex >= 0)
+    {
+        const today = new Date();
+        const actualDate = today.getMonth()+'/'+today.getDay()+'/'+today.getFullYear()+' '+today.getHours()+':'+today.getMinutes()+':'+today.getSeconds();
+        await updateSheetData(process.env.SPREADSHEET_ID, 'Remplissage skills!A'+dataIndex, [[name]]);
+        await updateSheetData(process.env.SPREADSHEET_ID, 'Remplissage skills!C'+dataIndex, [[actualDate]]);
+        await updateSheetData(process.env.SPREADSHEET_ID, 'Remplissage skills!D'+dataIndex, [[aaw]]);
+        await updateSheetData(process.env.SPREADSHEET_ID, 'Remplissage skills!E'+dataIndex, [[coo]]);
+        await updateSheetData(process.env.SPREADSHEET_ID, 'Remplissage skills!F'+dataIndex, [[cuisine]]);
+        await updateSheetData(process.env.SPREADSHEET_ID, 'Remplissage skills!G'+dataIndex, [[sportif]]);
+        await updateSheetData(process.env.SPREADSHEET_ID, 'Remplissage skills!H'+dataIndex, [[majeur]]);
+        //console.log('ligne n°'+dataIndex+' :'+name+' '+discord_id+' '+aaw+' '+coo+' '+cuisine+' '+sportif+' '+majeur);
+        res.sendStatus(200);
+    }
 })
 
 app.get('/api/getName', async (req, res) => {
