@@ -7,7 +7,7 @@ export default class Authsuccess extends React.Component {
         document.title = "Authentification Réussie";
 
         setTimeout(() => {
-            //window.close();
+            window.close();
         }, 2000);
     }
 

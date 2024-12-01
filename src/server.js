@@ -1,12 +1,27 @@
 const express = require("express");
 const cookieSession = require('cookie-session')
-require('dotenv').config()
+const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
+const mysql = require('mysql2')
+const cookieParser = require('cookie-parser');
 const axios = require('axios');
 const fs = require('fs');
 const {redirect} = require("react-router-dom");
 const path = require('path');
 const { google } = require('googleapis');
 const {expressCspHeader, INLINE, NONE, SELF} = require('express-csp-header');
+require('dotenv').config()
+
+
+const dbOptions = {
+    host: 'localhost',      // your MariaDB host
+    port: 3306,             // your MariaDB port (default: 3306)
+    user: process.env.DATABASE_USER,           // your MariaDB username
+    password: process.env.DATABASE_PASSWORD, // your MariaDB password
+    database: process.env.DATABASE  // your MariaDB database name for session storage
+};
+
+console.log(dbOptions);
 
 const port = 3000 ;
 const app = express() ;
@@ -16,13 +31,21 @@ const { ok } = require("assert");
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cookieSession({
-    keys: [process.env.SESSION_SECRET],
-    secure: false,
-    httpOnly: false,
-    sameSite: 'lax',
-    domain: 'localhost'
-}))
+
+const connection = mysql.createPool(dbOptions);
+
+const sessionStore = new MySQLStore({}, connection);
+
+app.use(session({
+    secret: [process.env.SESSION_SECRET],
+    resave: false,
+    saveUninitialized: false,
+    store: sessionStore,
+    cookie: {
+        maxAge: 24 * 60 * 60 * 1000,
+        secure: false
+    }
+}));
 
 app.use(expressCspHeader({
     directives: {
@@ -69,7 +92,7 @@ async function updateSheetData(spreadsheetId, range, values) {
             range: range,
             valueInputOption: 'USER_ENTERED',
             resource: {
-                values: values, // Par exemple, [[ "Nouvelle Valeur" ]]
+                values: values,
             },
         });
         //console.log(`Mise à jour : ${res.data.updatedCells} cellules mises à jour`);
@@ -183,10 +206,61 @@ app.get('/auth/discord/callback', async (req, res) => {
         req.session.refresh_token = data.refresh_token;
         req.session.scope = data.scope;
 
-        console.log(req.session);
+
+        res.cookie('sessionID', req.sessionID, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: data.expires_in * 1000,
+            sameSite: 'Strict'
+        });
     }
 
     res.sendFile(path.join(__dirname, 'public', 'views', 'index.html'));
+});
+
+app.get('/api/isLogged', (req, res) => {
+    const { sessionID } = req.cookies;  // Get session ID from cookies
+
+    if (!sessionID) {
+        return res.json({ isLogged: false });
+    }
+
+    const query = 'SELECT * FROM sessions WHERE session_id = ?';
+
+    connection.query(query, [sessionID], (err, results) => {
+        if (err) {
+            console.error("Error checking session ID:", err);
+            return res.status(500).send('Internal Server Error');
+        }
+        console.log("Session exists: ", sessionID);
+        if (results.length > 0) {
+            const sessionInfos = results[0]
+            const expires = sessionInfos.expires;
+            console.log(expires, Date.now()/1000);
+            if (expires > Date.now()/1000){
+                console.log("Session exists and is valid: ", sessionID);
+                return res.json({ isLogged: true });
+            }
+            else {
+                console.log("Session expired");
+                const deleteQuery = 'DELETE FROM sessions WHERE session_id = ?';
+
+                connection.query(deleteQuery, [sessionID], (deleteErr, deleteResults) => {
+                    if (deleteErr) {
+                        console.error("Error deleting expired session:", deleteErr);
+                        return res.status(500).send('Internal Server Error');
+                    }
+                });
+                console.log("Session expired and deleted: ", sessionID);
+                res.clearCookie('sessionID');
+                return res.json({ isLogged: "expired" });
+            }
+
+        } else {
+            console.log("No session found for: ", sessionID);
+            return res.json({ isLogged: false });
+        }
+    });
 });
 
 app.get('/*', (req,res) => {

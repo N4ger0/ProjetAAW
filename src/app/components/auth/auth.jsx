@@ -4,16 +4,27 @@ export default class Auth extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoggedIn: Boolean(document.cookie.match(/^(.*;)?\s*session\s*=\s*[^;]+(.*)?$/)),  // Check session cookie initially
             username: null,
-            avatarUrl: null  // Add a state for avatar URL
+            avatarUrl: null,
+            isLogged: false, // Track login state
         };
     }
 
-    componentDidMount() {
-        // Fetch username and avatar if already logged in on component mount
-        if (this.state.isLoggedIn) {
-            this.fetchUserInfo();
+    async componentDidMount() {
+        // Check if the user is logged in on component mount
+        const response = await fetch("http://localhost:3000/api/isLogged", {
+            method: 'GET',
+            credentials: 'same-origin'
+        });
+
+        const { isLogged } = await response.json();
+
+        if (isLogged==="expired"){
+            window.alert("Session expirée, veuillez vous reconnecter ! Merci");
+        }
+        else if (isLogged) {
+            this.setState({ isLogged: true });
+            await this.fetchUserInfo();
         }
     }
 
@@ -35,14 +46,19 @@ export default class Auth extends React.Component {
             `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes,status=yes`
         );
 
-        const popupInterval = setInterval(() => {
+        const popupInterval = setInterval(async () => {
             if (popup.closed) {
                 clearInterval(popupInterval);
 
-                // Check if session is established
-                const isLoggedIn = Boolean(document.cookie.match(/^(.*;)?\s*session\s*=\s*[^;]+(.*)?$/));
-                if (isLoggedIn) {
-                    this.setState({ isLoggedIn: true });
+                // Check if the user is logged in after closing the popup
+                const response = await fetch("http://localhost:3000/api/isLogged", {
+                    method: 'GET',
+                    credentials: 'same-origin'
+                });
+
+                const { isLogged } = await response.json();
+                if (isLogged) {
+                    this.setState({ isLogged: true });
                     this.fetchUserInfo();
                 }
             }
@@ -51,7 +67,11 @@ export default class Auth extends React.Component {
 
     fetchUserInfo = async () => {
         try {
-            const response = await fetch("http://localhost:3000/api/getUserInfo");
+            const response = await fetch("http://localhost:3000/api/getUserInfo", {
+                method: 'GET',
+                credentials: 'same-origin' // Ensure cookies are sent with the request
+            });
+
             const { global_name, avatarUrl } = await response.json();
             this.setState({ username: global_name, avatarUrl });
         } catch (error) {
@@ -60,20 +80,20 @@ export default class Auth extends React.Component {
     };
 
     render() {
-        const { isLoggedIn, username, avatarUrl } = this.state;
+        const { username, avatarUrl, isLogged } = this.state;
 
-        return isLoggedIn ? (
+        return isLogged ? (
             <div id="signInDiscord" className="connected">
-                <img className="rounded_icon"
-                     src={avatarUrl}
-                     alt="Discord"/>
+                <img className="rounded_icon" src={avatarUrl} alt="Discord" />
                 {username ? <span>{username}</span> : <span>En attente...</span>}
             </div>
         ) : (
             <button id="signInDiscord" onClick={this.signInWithDiscord}>
-                <img className="icon"
-                     src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/discord-white-icon.png"
-                     alt="Discord"/>
+                <img
+                    className="icon"
+                    src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/discord-white-icon.png"
+                    alt="Discord"
+                />
                 S'authentifier avec Discord
             </button>
         );
