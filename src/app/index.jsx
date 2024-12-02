@@ -1,48 +1,77 @@
-import React from "react";
+import React, { useEffect, useState, createContext, useContext } from "react";
 import ReactDOM from "react-dom/client";
 import {
-    createBrowserRouter,
+    createBrowserRouter, Navigate,
     RouterProvider,
-  } from "react-router-dom";
-import Header from "./components/header/header"
+} from "react-router-dom";
+import Header from "./components/header/header";
 import dotenv from "dotenv";
 import Authsuccess from "./components/auth/authsuccess";
-import './index.css'
+import './index.css';
 import SpreadSheet from "./components/spreadsheet/spreadsheet";
 import SpreadSheetLink from "./components/spreadsheet/spreasheetLink";
 import PageNotFound from "./components/not_found/PageNotFound";
 
 dotenv.config();
 
-class Application extends React.Component {
+// Create a context for authentication state
+const AuthContext = createContext();
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            logged : false
-        }
-    }
+export function useAuth() {
+    return useContext(AuthContext);
+}
 
-    setLogged = (value) => {
-        this.setState({ logged: value });
-    }
+function Application() {
+    const { logged, setLogged } = useAuth();
 
-    render() {
-        return(
-            <div>
-                <Header logged={this.state.logged} setLogged={this.setLogged}></Header>
-                <div id="content">
-                    <div id="div_stock">
-                        <h1> Managez les skills de votre équipe !</h1>
-                    </div>
-                    <div id={"div_first_text"}>
-                        <b>Chez Skillset, nous croyons qu'une équipe compétente est la clé de tout succès !</b>
-                    </div>
-                    <img src={"/img/rectangle.svg"} alt={"rectangle"}></img>
+    return (
+        <div>
+            <Header logged={logged} setLogged={setLogged} />
+            <div id="content">
+                <div id="div_stock">
+                    <h1>Managez les skills de votre équipe !</h1>
                 </div>
+                <div id={"div_first_text"}>
+                    <b>Chez Skillset, nous croyons qu'une équipe compétente est la clé de tout succès !</b>
+                </div>
+                <img src={"/img/rectangle.svg"} alt={"rectangle"} />
             </div>
-        );
+        </div>
+    );
+}
+
+function AppWrapper() {
+    const [logged, setLogged] = useState(false);
+
+    useEffect(() => {
+        fetch('/api/isLogged')
+            .then((response) => response.json())
+            .then((data) => {
+                setLogged(data.isLogged);
+                console.log("Application is connected : " + data.isLogged);
+            })
+            .catch((error) => {
+                console.error('Error fetching login status:', error);
+                setLogged(false);
+            });
+    }, []);
+
+    const authValue = { logged, setLogged };
+
+    return (
+        <AuthContext.Provider value={authValue}>
+            <RouterProvider router={router} />
+        </AuthContext.Provider>
+    );
+}
+
+function ProtectedRoute({ children }) {
+    const { logged } = useAuth();
+
+    if (!logged) {
+        return <Navigate to="/" />;
     }
+    return children;
 }
 
 const router = createBrowserRouter([
@@ -52,24 +81,32 @@ const router = createBrowserRouter([
     },
     {
         path: "/spreedSheet",
-        element: <SpreadSheet/>,
+        element: (
+            <ProtectedRoute>
+                <SpreadSheet/>
+            </ProtectedRoute>
+        ),
     },
     {
         path: "/auth/discord/callback",
-        element: <Authsuccess/>,
+        element: <Authsuccess />,
     },
     {
         path: "/spreedSheet/:name",
-        element: <SpreadSheetLink/>,
+        element: (
+            <ProtectedRoute>
+                <SpreadSheetLink/>
+            </ProtectedRoute>
+        ),
     },
     {
         path: "*",
-        element: <PageNotFound/>
-    }
-  ]);
+        element: <PageNotFound />,
+    },
+]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
-      <RouterProvider router={router} />
+        <AppWrapper />
     </React.StrictMode>
 );

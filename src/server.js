@@ -26,7 +26,6 @@ console.log(dbOptions);
 const port = 3000 ;
 const app = express() ;
 
-const cookieParser = require('cookie-parser');
 const { ok } = require("assert");
 app.use(express.json());
 app.use(cookieParser());

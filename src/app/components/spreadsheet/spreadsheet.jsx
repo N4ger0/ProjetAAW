@@ -7,7 +7,7 @@ export default class SpreadSheet extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        skills: [], // Initialisation en tant que tableau
+        skills: [],
         loading: true,
         filterData: "",
       };
@@ -38,7 +38,7 @@ export default class SpreadSheet extends React.Component {
     render() {
       const { skills, loading, filterData} = this.state;
       const dataToShow = skills.filter((row, index) => row[0].toLowerCase().includes(filterData.toLowerCase()));
-  
+
       return (
         <div>
           <Header/>

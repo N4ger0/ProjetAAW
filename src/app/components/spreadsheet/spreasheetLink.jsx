@@ -72,7 +72,6 @@ function SpreadSheetLink() {
         setboutonEnabled(false);
         window.location.reload();
     };
-    
 
     const [newName, setnewName] = useState('');
     const [newAAW, setnewAAW] = useState('');
@@ -81,7 +80,8 @@ function SpreadSheetLink() {
     const [newSportif, setnewSportif] = useState('');
     const [newMajeur, setnewMajeur] = useState('');
     const [boutonEnabled, setboutonEnabled] = useState(false);
-        
+
+
     return(
         <div>
             <Header/>

@@ -6,12 +6,11 @@ export default class Auth extends React.Component {
         this.state = {
             username: null,
             avatarUrl: null,
-            isLogged: false, // Track login state
+            isLogged: null,
         };
     }
 
     async componentDidMount() {
-        // Check if the user is logged in on component mount
         const response = await fetch("http://localhost:3000/api/isLogged", {
             method: 'GET',
             credentials: 'same-origin'
@@ -25,6 +24,7 @@ export default class Auth extends React.Component {
         else if (isLogged) {
             this.setState({ isLogged: true });
             await this.fetchUserInfo();
+            this.props.setLogged(true);
         }
     }
 
@@ -50,7 +50,6 @@ export default class Auth extends React.Component {
             if (popup.closed) {
                 clearInterval(popupInterval);
 
-                // Check if the user is logged in after closing the popup
                 const response = await fetch("http://localhost:3000/api/isLogged", {
                     method: 'GET',
                     credentials: 'same-origin'
@@ -60,6 +59,7 @@ export default class Auth extends React.Component {
                 if (isLogged) {
                     this.setState({ isLogged: true });
                     this.fetchUserInfo();
+                    this.props.setLogged(true);
                 }
             }
         }, 500);
@@ -69,7 +69,7 @@ export default class Auth extends React.Component {
         try {
             const response = await fetch("http://localhost:3000/api/getUserInfo", {
                 method: 'GET',
-                credentials: 'same-origin' // Ensure cookies are sent with the request
+                credentials: 'same-origin'
             });
 
             const { global_name, avatarUrl } = await response.json();
