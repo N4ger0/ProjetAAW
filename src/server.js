@@ -118,10 +118,12 @@ app.post('/api/spreadsheet/change',async (req, res) => {
     const update_value = req.body;
     const rawData = await readSheetData(process.env.SPREADSHEET_ID, process.env.SPREADSHEET_FEUILLE);
     const dataIndex = rawData.findIndex((row, index) => row[1] === update_value[1]) + 1; //discord_id == discord_id
+    console.log(dataIndex);
+    console.log(update_value);
     if(dataIndex >= 0)
     {
-        for(let i = 0 ; i < rawData.length; i++){
-            await updateSheetData(process.env.SPREADSHEET_ID, process.env.SPREADSHEET_FEUILLE + '!' + String.fromCharCode(64+i) + dataIndex, [[update_value[i]]])
+        for(let i = 0 ; i < rawData[0].length; i++){
+            await updateSheetData(process.env.SPREADSHEET_ID, process.env.SPREADSHEET_FEUILLE + '!' + String.fromCharCode(65+i) + dataIndex, [[update_value[i]]])
         }
         res.sendStatus(200);
     }

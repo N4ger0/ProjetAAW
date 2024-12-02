@@ -2,7 +2,6 @@ import React, {useState , useEffect} from "react";
 import {redirect, useParams} from "react-router-dom";
 import "./spreadsheet.css"
 import Header from "../header/header";
-import {sheets} from "googleapis/build/src/apis/sheets";
 
 function SpreadSheetLink() {
     const { name } = useParams();
@@ -35,6 +34,7 @@ function SpreadSheetLink() {
 
     const buildBodyJson = () => {
         let result = [] ;
+        let valid = true ;
         for (let i = 0; i < data[0].length; i++) {
             if(i == 1) { //discord id
                 result.push(data[1][i]) ;
@@ -44,40 +44,54 @@ function SpreadSheetLink() {
                 const today = new Date();
                 const actualDate = today.getMonth()+'/'+today.getDay()+'/'+today.getFullYear()+' '+today.getHours()+':'+today.getMinutes()+':'+today.getSeconds();
                 result.push(actualDate) ;
+                continue ;
             }
             if(newvalues[i] != null){
+                if(!validateNote(newvalues[i])) {
+                    window.alert("La note saisie doit être un entier compris entre 0 et 10.")
+                    valid = false ;
+                    break ;
+                }
                 result.push(newvalues[i]);
             }
             else {
                 result.push(data[1][i]);
             }
         }
-        return result ;
+        console.log(result)
+        return [ result, valid ];
+
     }
 
     const changeData = async () => {
         setboutonEnabled(true);
-        let body = buildBodyJson() ;
-        try {
-            const response = await fetch('http://localhost:3000/api/spreadsheet/change', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(body),
-            });    
-            if (response.ok) {
-                console.log('Fonction exécutée avec succès');
+        let [ result, valid ] = buildBodyJson() ;
+        console.log(result)
+        if(valid === true) {
+            try {
+                console.log("dans le try")
+                const response = await fetch('http://localhost:3000/api/spreadsheet/change', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(result),
+                });
+                if (response.ok) {
+                    console.log('Fonction exécutée avec succès');
 
-            } else {
-                console.error('Erreur lors de l\'exécution');
+                } else {
+                    console.error('Erreur lors de l\'exécution');
+                }
+            } catch (error) {
+                console.error('Erreur réseau :', error);
             }
-        } catch (error) {
-            console.error('Erreur réseau :', error);
+            setboutonEnabled(false);
+            window.location.reload();
+            return ;
         }
         setboutonEnabled(false);
-        window.location.reload();
     };
     
 
@@ -108,7 +122,7 @@ function SpreadSheetLink() {
                     ))}
                     </tr>
                     <tr key="2">
-                        {data[1].map((row, index) => (
+                        {data[0].map((row, index) => (
                             index == 1 || index == 2 ? ( <td></td>)
                                 : (<td><input type={"text"} onChange={e => newvalues[index] = e.target.value}/></td>)
                         ))}
