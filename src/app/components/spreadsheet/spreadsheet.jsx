@@ -54,36 +54,30 @@ export default class SpreadSheet extends React.Component {
                   <table border="1">
                   <thead>
                       <tr>
-                        <th>Name</th>
-                        <th>Discord ID</th>
-                        <th>Last update</th>
-                        <th>AAW</th>
-                        <th>COO</th>
-                        <th>Cuisine</th>
-                        <th>Sportif</th>
-                        <th>Majeur</th>
-                        <th>Colonne de merde de Maxime</th>
+                          {dataToShow[0].map((row) => (
+                              <th>{row}</th>
+                              )
+                          )}
                       </tr>
                   </thead>
                   <tbody>
                       {dataToShow.map((row, index) => (
-                      <tr key={index}>
-                        <td> <Link to={"/spreedSheet/"+row[0].replaceAll(' ','_')} > {row[0]} </Link> </td>
-                        <td>{row[1]}</td>
-                        <td>{row[2]}</td>
-                        <td>{row[3]}</td>
-                        <td>{row[4]}</td>
-                        <td>{row[5]}</td>
-                        <td>{row[6]}</td>
-                        <td>{row[7]}</td>
-                        <td>{row[8]}</td>
-                      </tr>
+                          index!==0 ? (
+                              <tr key={index}>
+                                  {row.map((cell, index2) => (
+                                      index2===0 ? (
+                                          <td><Link to={"/spreedSheet/" + cell.replaceAll(' ', '_')}> {cell} </Link></td>
+                                      ) : (<td>{cell}</td>)
+                                      )
+                                  )}
+                              </tr>
+                          ) : null
                       ))}
                   </tbody>
                   </table>
               </div>)}
             </div>
-          </div>
+        </div>
       );
     }
-  }
+}

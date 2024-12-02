@@ -9,6 +9,10 @@ table, caption, tbody, tfoot, thead, tr, th, td {
     border-collapse: collapse;
 }
 
+table {
+    width : fit-content !important;
+}
+
 thead {
     background-color: #bb3e03 ;
     color : #ffffff;
@@ -36,4 +40,8 @@ tbody tr:last-of-type {
 tbody tr:hover {
     color: #bb3e03;
     background-color : #e6d2a3;
+}
+
+input {
+    width : 100% ;
 }
