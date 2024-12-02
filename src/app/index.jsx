@@ -14,7 +14,6 @@ import PageNotFound from "./components/not_found/PageNotFound";
 
 dotenv.config();
 
-// Create a context for authentication state
 const AuthContext = createContext();
 
 export function useAuth() {

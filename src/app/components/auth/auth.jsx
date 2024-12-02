@@ -84,8 +84,14 @@ export default class Auth extends React.Component {
 
         return isLogged ? (
             <div id="signInDiscord" className="connected">
-                <img className="rounded_icon" src={avatarUrl} alt="Discord" />
-                {username ? <span>{username}</span> : <span>En attente...</span>}
+                {username ? (
+                    <>
+                        <img className="rounded_icon" src={avatarUrl} alt="Discord" />
+                        <span>{username}</span>
+                    </>
+                ) : (
+                    <span>En attente...</span>
+                )}
             </div>
         ) : (
             <button id="signInDiscord" onClick={this.signInWithDiscord}>

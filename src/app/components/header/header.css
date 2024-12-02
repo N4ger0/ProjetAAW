@@ -64,7 +64,6 @@
     background-color: #3ba55d;
 }
 
-
 #sidemenu > #signInDiscord:hover,
 #sidemenu > #signInDiscord.connected:hover {
     transform: scale(1.05);

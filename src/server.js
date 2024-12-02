@@ -14,11 +14,11 @@ require('dotenv').config()
 
 
 const dbOptions = {
-    host: 'localhost',      // your MariaDB host
-    port: 3306,             // your MariaDB port (default: 3306)
-    user: process.env.DATABASE_USER,           // your MariaDB username
-    password: process.env.DATABASE_PASSWORD, // your MariaDB password
-    database: process.env.DATABASE  // your MariaDB database name for session storage
+    host: 'localhost',
+    port: 3306,
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    database: process.env.DATABASE
 };
 
 console.log(dbOptions);
@@ -135,7 +135,6 @@ app.post('/api/spreadsheet/change',async (req, res) => {
 })
 
 app.get('/api/getName', async (req, res) => {
-    //console.log(req.session);
     let response = await axios.get("https://discord.com/api/users/@me", {
         headers: {
             Authorization: `Bearer ${req.session.access_token}`
@@ -148,12 +147,10 @@ app.get('/api/getName', async (req, res) => {
 
 app.get('/api/getUserInfo', async (req, res) => {
     try {
-        // Ensure the user is authenticated
         if (!req.session.access_token) {
             return res.status(401).send('Unauthorized: No access token');
         }
 
-        // Fetch user data from Discord API
         let response = await axios.get("https://discord.com/api/users/@me", {
             headers: {
                 Authorization: `Bearer ${req.session.access_token}`
@@ -162,15 +159,13 @@ app.get('/api/getUserInfo', async (req, res) => {
 
         const userData = response.data;
 
-        // Construct the avatar URL
         const avatarUrl = userData.avatar
             ? `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png`
-            : `https://cdn.discordapp.com/embed/avatars/${userData.discriminator % 5}.png`; // Fallback URL
+            : `https://cdn.discordapp.com/embed/avatars/${userData.discriminator % 5}.png`;
 
-        req.session.discord_id = userData.id;
-        // Send the global_name and avatar URL in the response
         res.json({
             global_name: userData.global_name,
+            discord_id: userData.id,
             avatarUrl: avatarUrl
         });
     } catch (error) {
@@ -205,7 +200,6 @@ app.get('/auth/discord/callback', async (req, res) => {
         req.session.refresh_token = data.refresh_token;
         req.session.scope = data.scope;
 
-
         res.cookie('sessionID', req.sessionID, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
@@ -217,8 +211,11 @@ app.get('/auth/discord/callback', async (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'views', 'index.html'));
 });
 
+const adminUsers = process.env.ADMIN_USERS.split(',');
+console.log(adminUsers);
+
 app.get('/api/isLogged', (req, res) => {
-    const { sessionID } = req.cookies;  // Get session ID from cookies
+    const { sessionID } = req.cookies;
 
     if (!sessionID) {
         return res.json({ isLogged: false });
@@ -231,17 +228,41 @@ app.get('/api/isLogged', (req, res) => {
             console.error("Error checking session ID:", err);
             return res.status(500).send('Internal Server Error');
         }
-        console.log("Session exists: ", sessionID);
+
         if (results.length > 0) {
-            const sessionInfos = results[0]
+            const sessionInfos = results[0];
             const expires = sessionInfos.expires;
-            console.log(expires, Date.now()/1000);
-            if (expires > Date.now()/1000){
-                console.log("Session exists and is valid: ", sessionID);
-                return res.json({ isLogged: true });
-            }
-            else {
-                console.log("Session expired");
+
+            if (expires > Date.now() / 1000) {
+
+                let sessionData;
+
+                try {
+                    sessionData = JSON.parse(sessionInfos.data);
+                } catch (parseError) {
+                    console.error("Error parsing session data:", parseError);
+                    return res.status(500).send('Error parsing session data');
+                }
+
+                const discordId = sessionData.discord_id;
+
+                console.log("id a check : ", discordId, " vs ids admin : ", adminUsers);
+
+                if (adminUsers.includes(discordId)) {
+                    console.log("Admin user logged in:", discordId);
+                    return res.json({
+                        isLogged: true,
+                        isAdmin : true
+                    });
+                }
+                else {
+                    return res.json({
+                        isLogged: true,
+                        isAdmin : false
+                    });
+                }
+
+            } else {
                 const deleteQuery = 'DELETE FROM sessions WHERE session_id = ?';
 
                 connection.query(deleteQuery, [sessionID], (deleteErr, deleteResults) => {
@@ -250,11 +271,10 @@ app.get('/api/isLogged', (req, res) => {
                         return res.status(500).send('Internal Server Error');
                     }
                 });
-                console.log("Session expired and deleted: ", sessionID);
+
                 res.clearCookie('sessionID');
                 return res.json({ isLogged: "expired" });
             }
-
         } else {
             console.log("No session found for: ", sessionID);
             return res.json({ isLogged: false });
