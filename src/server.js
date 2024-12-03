@@ -57,7 +57,6 @@ app.use(expressCspHeader({
     }
 }));
 
-const SPREADSHEET_ID = '1BID2_QCGI1BLs6uTN1KADR-FYbG-BEyPmnlgOI0d1kI';
 const keyFilePath = path.join(__dirname, 'auth', 'credential.json');
 
 // Utilise le chemin relatif vers ton fichier de clés JSON
@@ -174,6 +173,7 @@ app.get('/api/getUserInfo', async (req, res) => {
     }
 });
 
+
 app.get('/auth/discord/callback', async (req, res) => {
     console.log(process.env.CLIENT_ID);
     console.log(process.env.CLIENT_SECRET);
@@ -209,6 +209,26 @@ app.get('/auth/discord/callback', async (req, res) => {
     }
 
     res.sendFile(path.join(__dirname, 'public', 'views', 'index.html'));
+});
+
+app.post('/api/logout', (req, res) => {
+    const { sessionID } = req.cookies;
+
+    if (!sessionID) {
+        return res.status(400).json({ message: 'No session found to log out.' });
+    }
+
+    const deleteQuery = 'DELETE FROM sessions WHERE session_id = ?';
+
+    connection.query(deleteQuery, [sessionID], (err, results) => {
+        if (err) {
+            console.error("Error deleting session during logout:", err);
+            return res.status(500).send('Internal Server Error');
+        }
+
+        res.clearCookie('sessionID');
+        return res.json({ message: 'Successfully logged out.' });
+    });
 });
 
 const adminUsers = process.env.ADMIN_USERS.split(',');

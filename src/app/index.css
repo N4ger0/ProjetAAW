@@ -53,3 +53,32 @@ html {
     padding-top : 20px ;
     padding-bottom : 20px ;
 }
+
+/* Input Styling */
+input {
+    width: 100%;
+    max-width: 300px;
+    padding: 2px 3px;
+    margin: 5px auto;
+    display: block;
+    border: 2px solid #bb3e03;
+    border-radius: 5px;
+    font-family: 'Poppins', serif;
+    font-size: 16px;
+    color: #333;
+    background-color: #f8f9fa;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+input:focus {
+    border-color: #3a86ff; /* Change border color on focus */
+    box-shadow: 0 0 10px rgba(58, 134, 255, 0.5); /* Add glow effect */
+}
+
+input::placeholder {
+    color: #bbb; /* Placeholder text color */
+    font-style: italic; /* Optional italic style */
+}

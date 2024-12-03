@@ -48,8 +48,7 @@ export default class SpreadSheet extends React.Component {
               ) : (
               <div>
                 <form>
-                  <label for="site-search">Search :</label>
-                  <input type="search" id="site-search" name="q" onChange={this.handleSearchChange} />
+                  <input type="search" id="site-search" name="q" placeholder="Rechercher" onChange={this.handleSearchChange} />
                 </form>
                   <table border="1">
                   <thead>

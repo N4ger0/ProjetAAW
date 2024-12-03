@@ -1,4 +1,5 @@
 import React from "react";
+import {useAuth} from "../../index";
 
 export default class Auth extends React.Component {
     constructor(props) {
@@ -79,15 +80,38 @@ export default class Auth extends React.Component {
         }
     };
 
+    logout = async () => {
+        const response = await fetch('/api/logout', {
+            method: 'POST',
+            credentials: 'include',
+        });
+
+        if (response.ok) {
+            this.props.setLogged(false);
+            this.setState({
+                username: null,
+                avatarUrl: null,
+                isLogged: false,
+            });
+        } else {
+            console.error('Failed to log out:', response.statusText);
+        }
+    };
+
     render() {
         const { username, avatarUrl, isLogged } = this.state;
 
         return isLogged ? (
-            <div id="signInDiscord" className="connected">
+            <div
+                id="signInDiscord"
+                className="connected"
+                onClick={this.logout}
+            >
                 {username ? (
                     <>
                         <img className="rounded_icon" src={avatarUrl} alt="Discord" />
-                        <span>{username}</span>
+                        <span className="default-text">{username}</span>
+                        <span className="hover-text">Se déconnecter</span>
                     </>
                 ) : (
                     <span>En attente...</span>

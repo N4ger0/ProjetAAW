@@ -60,24 +60,29 @@
     border-radius: 50%;
 }
 
+/* Default styles for connected button */
 #signInDiscord.connected {
     background-color: #3ba55d;
-}
-
-#sidemenu > #signInDiscord:hover,
-#sidemenu > #signInDiscord.connected:hover {
-    transform: scale(1.05);
+    color: white;
+    position: relative;
 }
 
 #signInDiscord.connected:hover {
-    background-color: #2f8a48;
+    background-color: #ff2d2d;
 }
 
-#sidemenu button:hover {
-    background-color: #4752C4;
+#signInDiscord.connected span.hover-text {
+    display: none;
 }
 
-/* Discord Sign-In button styles */
+#signInDiscord.connected:hover span.default-text {
+    display: none;
+}
+
+#signInDiscord.connected:hover span.hover-text {
+    display: inline;
+}
+
 #signInDiscord {
     background-color: #5865F2;
     color: white;

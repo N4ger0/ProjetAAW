@@ -43,16 +43,20 @@ function AppWrapper() {
     const [logged, setLogged] = useState(false);
 
     useEffect(() => {
-        fetch('/api/isLogged')
-            .then((response) => response.json())
-            .then((data) => {
+        const checkLoginStatus = async () => {
+            try {
+                const response = await fetch('/api/isLogged', {
+                    method: 'GET',
+                    credentials: 'same-origin',
+                });
+                const data = await response.json();
                 setLogged(data.isLogged);
-                console.log("Application is connected : " + data.isLogged);
-            })
-            .catch((error) => {
-                console.error('Error fetching login status:', error);
+            } catch (error) {
+                console.error('Error checking login status:', error);
                 setLogged(false);
-            });
+            }
+        };
+        checkLoginStatus();
     }, []);
 
     const authValue = { logged, setLogged };

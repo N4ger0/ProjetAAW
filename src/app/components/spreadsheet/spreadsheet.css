@@ -9,6 +9,10 @@ table, caption, tbody, tfoot, thead, tr, th, td {
     border-collapse: collapse;
 }
 
+#content {
+    align-items: center;
+}
+
 thead {
     background-color: #bb3e03 ;
     color : #ffffff;
@@ -36,4 +40,19 @@ tbody tr:last-of-type {
 tbody tr:hover {
     color: #bb3e03;
     background-color : #e6d2a3;
+}
+
+a {
+    text-decoration: none;
+    color: #9f3803;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #0056b3;
+}
+
+a:focus {
+    outline: none;
 }
