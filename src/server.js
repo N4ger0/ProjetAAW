@@ -3,7 +3,6 @@ const cookieSession = require('cookie-session')
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 const mysql = require('mysql2')
-const cookieParser = require('cookie-parser');
 const axios = require('axios');
 const fs = require('fs');
 const {redirect} = require("react-router-dom");
@@ -27,6 +26,7 @@ const port = 3000 ;
 const app = express() ;
 
 const { ok } = require("assert");
+const {update} = require("store/plugins/all_tests");
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -59,7 +59,6 @@ app.use(expressCspHeader({
 
 const keyFilePath = path.join(__dirname, 'auth', 'credential.json');
 
-// Utilise le chemin relatif vers ton fichier de clés JSON
 const auth = new google.auth.GoogleAuth({
     keyFile: keyFilePath, // Assurez-vous que le nom du fichier est correct
     scopes: ['https://www.googleapis.com/auth/spreadsheets'], // Permissions pour lire et écrire
@@ -101,34 +100,29 @@ async function updateSheetData(spreadsheetId, range, values) {
 }
 
 app.get('/api/spreadsheet', async (req,res) => {
-    const data = await readSheetData(process.env.SPREADSHEET_ID, 'Remplissage skills!A2:Z100');
+    const data = await readSheetData(process.env.SPREADSHEET_ID, process.env.SPREADSHEET_FEUILLE);
     res.json(data);
 })
 
 app.get('/api/spreadsheet/:name', async (req,res) => {
     const { name }= (req.params);
-    nameInArray = name.replaceAll('_',' ');
-    const rawData = await readSheetData(process.env.SPREADSHEET_ID, 'Remplissage skills!A2:Z100');
-    const data = rawData.filter(item => item[0] === nameInArray);
+    let nameInArray = name.replaceAll('_',' ');
+    const rawData = await readSheetData(process.env.SPREADSHEET_ID, process.env.SPREADSHEET_FEUILLE);
+    const data = rawData.filter((item, index) => item[0] === nameInArray || index == 0); //LAISSER LE WARNING, index est number et 0 est int, on a besoin de l'inférence de type
     res.json(data);
 })
 
 app.post('/api/spreadsheet/change',async (req, res) => {
-    const {discord_id, name, aaw, coo, cuisine, sportif, majeur} = req.body;
-    const rawData = await readSheetData(process.env.SPREADSHEET_ID, 'Remplissage skills!A1:Z100');
-    const dataIndex = rawData.findIndex((row, index) => row[1] === discord_id) + 1;
+    const update_value = req.body;
+    const rawData = await readSheetData(process.env.SPREADSHEET_ID, process.env.SPREADSHEET_FEUILLE);
+    const dataIndex = rawData.findIndex((row, index) => row[1] === update_value[1]) + 1; //discord_id == discord_id
+    console.log(dataIndex);
+    console.log(update_value);
     if(dataIndex >= 0)
     {
-        const today = new Date();
-        const actualDate = today.getMonth()+'/'+today.getDay()+'/'+today.getFullYear()+' '+today.getHours()+':'+today.getMinutes()+':'+today.getSeconds();
-        await updateSheetData(process.env.SPREADSHEET_ID, 'Remplissage skills!A'+dataIndex, [[name]]);
-        await updateSheetData(process.env.SPREADSHEET_ID, 'Remplissage skills!C'+dataIndex, [[actualDate]]);
-        await updateSheetData(process.env.SPREADSHEET_ID, 'Remplissage skills!D'+dataIndex, [[aaw]]);
-        await updateSheetData(process.env.SPREADSHEET_ID, 'Remplissage skills!E'+dataIndex, [[coo]]);
-        await updateSheetData(process.env.SPREADSHEET_ID, 'Remplissage skills!F'+dataIndex, [[cuisine]]);
-        await updateSheetData(process.env.SPREADSHEET_ID, 'Remplissage skills!G'+dataIndex, [[sportif]]);
-        await updateSheetData(process.env.SPREADSHEET_ID, 'Remplissage skills!H'+dataIndex, [[majeur]]);
-        //console.log('ligne n°'+dataIndex+' :'+name+' '+discord_id+' '+aaw+' '+coo+' '+cuisine+' '+sportif+' '+majeur);
+        for(let i = 0 ; i < rawData[0].length; i++){
+            await updateSheetData(process.env.SPREADSHEET_ID, process.env.SPREADSHEET_FEUILLE + '!' + String.fromCharCode(65+i) + dataIndex, [[update_value[i]]])
+        }
         res.sendStatus(200);
     }
 })
