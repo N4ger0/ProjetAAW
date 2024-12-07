@@ -1,0 +1,14 @@
+#linklist a {
+    text-decoration: none;
+    color: #bb3e03;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+#linklist a:hover {
+    color: #0056b3;
+}
+
+#linklist a:focus {
+    outline: none;
+}

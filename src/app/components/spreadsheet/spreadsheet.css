@@ -9,8 +9,13 @@ table, caption, tbody, tfoot, thead, tr, th, td {
     border-collapse: collapse;
 }
 
+
 table {
     width : fit-content !important;
+}
+
+#content {
+    align-items: center;
 }
 
 thead {
@@ -44,4 +49,19 @@ tbody tr:hover {
 
 input {
     width : 100% ;
+}
+
+a {
+    text-decoration: none;
+    color: #9f3803;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #0056b3;
+}
+
+a:focus {
+    outline: none;
 }

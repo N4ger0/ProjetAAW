@@ -1,4 +1,5 @@
 import React from "react";
+import {useAuth} from "../../index";
 
 export default class Auth extends React.Component {
     constructor(props) {
@@ -6,12 +7,11 @@ export default class Auth extends React.Component {
         this.state = {
             username: null,
             avatarUrl: null,
-            isLogged: false, // Track login state
+            isLogged: null,
         };
     }
 
     async componentDidMount() {
-        // Check if the user is logged in on component mount
         const response = await fetch("http://localhost:3000/api/isLogged", {
             method: 'GET',
             credentials: 'same-origin'
@@ -25,6 +25,7 @@ export default class Auth extends React.Component {
         else if (isLogged) {
             this.setState({ isLogged: true });
             await this.fetchUserInfo();
+            this.props.setLogged(true);
         }
     }
 
@@ -50,7 +51,6 @@ export default class Auth extends React.Component {
             if (popup.closed) {
                 clearInterval(popupInterval);
 
-                // Check if the user is logged in after closing the popup
                 const response = await fetch("http://localhost:3000/api/isLogged", {
                     method: 'GET',
                     credentials: 'same-origin'
@@ -60,6 +60,7 @@ export default class Auth extends React.Component {
                 if (isLogged) {
                     this.setState({ isLogged: true });
                     this.fetchUserInfo();
+                    this.props.setLogged(true);
                 }
             }
         }, 500);
@@ -69,7 +70,7 @@ export default class Auth extends React.Component {
         try {
             const response = await fetch("http://localhost:3000/api/getUserInfo", {
                 method: 'GET',
-                credentials: 'same-origin' // Ensure cookies are sent with the request
+                credentials: 'same-origin'
             });
 
             const { global_name, avatarUrl } = await response.json();
@@ -79,13 +80,42 @@ export default class Auth extends React.Component {
         }
     };
 
+    logout = async () => {
+        const response = await fetch('/api/logout', {
+            method: 'POST',
+            credentials: 'include',
+        });
+
+        if (response.ok) {
+            this.props.setLogged(false);
+            this.setState({
+                username: null,
+                avatarUrl: null,
+                isLogged: false,
+            });
+        } else {
+            console.error('Failed to log out:', response.statusText);
+        }
+    };
+
     render() {
         const { username, avatarUrl, isLogged } = this.state;
 
         return isLogged ? (
-            <div id="signInDiscord" className="connected">
-                <img className="rounded_icon" src={avatarUrl} alt="Discord" />
-                {username ? <span>{username}</span> : <span>En attente...</span>}
+            <div
+                id="signInDiscord"
+                className="connected"
+                onClick={this.logout}
+            >
+                {username ? (
+                    <>
+                        <img className="rounded_icon" src={avatarUrl} alt="Discord" />
+                        <span className="default-text">{username}</span>
+                        <span className="hover-text">Se déconnecter</span>
+                    </>
+                ) : (
+                    <span>En attente...</span>
+                )}
             </div>
         ) : (
             <button id="signInDiscord" onClick={this.signInWithDiscord}>

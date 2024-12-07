@@ -7,7 +7,7 @@ export default class SpreadSheet extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        skills: [], // Initialisation en tant que tableau
+        skills: [],
         loading: true,
         filterData: "",
       };
@@ -38,7 +38,7 @@ export default class SpreadSheet extends React.Component {
     render() {
       const { skills, loading, filterData} = this.state;
       const dataToShow = skills.filter((row, index) => row[0].toLowerCase().includes(filterData.toLowerCase()));
-  
+
       return (
         <div>
           <Header/>
@@ -48,8 +48,7 @@ export default class SpreadSheet extends React.Component {
               ) : (
               <div>
                 <form>
-                  <label for="site-search">Search :</label>
-                  <input type="search" id="site-search" name="q" onChange={this.handleSearchChange} />
+                  <input type="search" id="site-search" name="q" placeholder="Rechercher" onChange={this.handleSearchChange} />
                 </form>
                   <table border="1">
                   <thead>
