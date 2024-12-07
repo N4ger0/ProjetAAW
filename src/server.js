@@ -27,6 +27,7 @@ const app = express() ;
 
 const { ok } = require("assert");
 const {update} = require("store/plugins/all_tests");
+const cookieParser = require("cookie-parser");
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -112,6 +113,48 @@ app.get('/api/spreadsheet/:name', async (req,res) => {
     res.json(data);
 })
 
+app.get('/api/canModify/:discord_id', (req, res) => {
+    const { userToModif } = req.params;
+    const { sessionID } = req.cookies;
+
+    const query = 'SELECT * FROM sessions WHERE session_id = ?';
+
+    connection.query(query, [sessionID], (err, results) => {
+        if (err) {
+            console.error("Error checking session ID:", err);
+            return res.status(500).send('Internal Server Error');
+        }
+
+        if (results.length > 0) {
+            const sessionInfos = results[0];
+
+            let sessionData;
+
+            try {
+                sessionData = JSON.parse(sessionInfos.data);
+                console.log(sessionData)
+            } catch (parseError) {
+                console.error("Error parsing session data:", parseError);
+                return res.status(500).send('Error parsing session data');
+            }
+
+            const discordId = sessionData.discord_id;
+
+            if (adminUsers.includes(discordId)) {
+                res.json({canModify : true})
+            }
+            else {
+
+                if (userToModif === discordId) {
+                    res.json({canModify: true})
+                } else {
+                    res.json({canModify: false})
+                }
+            }
+        }
+    });
+})
+
 app.post('/api/spreadsheet/change',async (req, res) => {
     const update_value = req.body;
     const rawData = await readSheetData(process.env.SPREADSHEET_ID, process.env.SPREADSHEET_FEUILLE);
@@ -156,9 +199,11 @@ app.get('/api/getUserInfo', async (req, res) => {
             ? `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png`
             : `https://cdn.discordapp.com/embed/avatars/${userData.discriminator % 5}.png`;
 
+        req.session.discord_id = userData.id ;
+
         res.json({
             global_name: userData.global_name,
-            discord_id: userData.id,
+            discord_id: userData.id, //TODO enlever le discord id ?
             avatarUrl: avatarUrl
         });
     } catch (error) {
@@ -253,6 +298,7 @@ app.get('/api/isLogged', (req, res) => {
 
                 try {
                     sessionData = JSON.parse(sessionInfos.data);
+                    console.log(sessionData)
                 } catch (parseError) {
                     console.error("Error parsing session data:", parseError);
                     return res.status(500).send('Error parsing session data');

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import './header.css';
 import { Link } from "react-router-dom";
 import Auth from "../auth/auth";
@@ -20,7 +20,6 @@ function Header() {
         } else {
             sidemenu.classList.remove("slide-in-right");
             menu.classList.remove("cross");
-            sidemenu.classList.add("hidden");
             sidemenu.classList.add("slide-out-right");
         }
 
@@ -28,6 +27,15 @@ function Header() {
         void menu.offsetWidth;
         void sidemenu.offsetWidth;
     };
+
+    useEffect(() => {
+        const sidemenu = document.getElementById("sidemenu");
+        sidemenu.addEventListener('animationend', function handleAnimationEnd() {
+            if (sidemenu.classList.contains("slide-out-right")) {
+                sidemenu.classList.add("hidden");
+            }
+        });
+    }, []);
 
     console.log("Header props is connected : " + logged);
 

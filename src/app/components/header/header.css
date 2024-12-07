@@ -7,6 +7,7 @@
 /* Animation Classes */
 .hidden {
     opacity: 0;
+    width : 0 !important ;
 }
 
 .slide-in-right {

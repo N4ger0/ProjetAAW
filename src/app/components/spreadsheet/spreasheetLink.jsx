@@ -25,12 +25,24 @@ function SpreadSheetLink() {
 
     const [data, setData] = useState(null);
 
-    useEffect(() => {
-        fetch(`/api/spreadsheet/${name}`)
-        .then(response => response.json())
-        .then(data => setData(data))
-        .catch(error => console.error("Erreur de chargement : ", error));
-    }, [name]);
+    const loadData = async () => {
+        await fetch(`/api/spreadsheet/${name}`)
+            .then(response => response.json())
+            .then(data => setData(data))
+            .catch(error => console.error("Erreur de chargement : ", error));
+    }
+
+    const loadCanModify = async () => {
+        await fetch(`/api/canModify/${data[1][1]}`)
+            .then(response => response.json())
+            .then(pasdata => setcanModify(pasdata))
+            .catch(error => console.error("Erreur lors de l'appel a canModify : ", error));
+    }
+
+    useEffect( () => {
+        loadData()
+        loadCanModify()
+    }, [name, data]);
 
     const buildBodyJson = () => {
         let result = [] ;
@@ -96,6 +108,7 @@ function SpreadSheetLink() {
 
     const [newvalues, setnewvalues] = useState([]);
     const [boutonEnabled, setboutonEnabled] = useState(false);
+    const [canModify, setcanModify] = useState(false) ;
 
 
     return(
@@ -121,12 +134,13 @@ function SpreadSheetLink() {
                             <td>{row}</td>
                     ))}
                     </tr>
+                    { canModify ? (
                     <tr key="2">
                         {data[0].map((row, index) => (
                             index == 1 || index == 2 ? ( <td></td>)
                                 : (<td><input type={"text"} onChange={e => newvalues[index] = e.target.value}/></td>)
                         ))}
-                    </tr>
+                    </tr> ) : null }
                     </tbody>
                 </table>
                 <button onClick={changeData} disabled={boutonEnabled}>Actualiser les données</button>
