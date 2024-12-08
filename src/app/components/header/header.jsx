@@ -6,7 +6,7 @@ import Linklist from "./linklist/linklist";
 import { useAuth } from "../../index";
 
 function Header() {
-    const { logged, setLogged } = useAuth();
+    const { logged, setLogged, isAdmin, setIsAdmin } = useAuth();
 
     const menuAnimation = () => {
         const sidemenu = document.getElementById("sidemenu");
@@ -50,8 +50,8 @@ function Header() {
                 <img src={"/img/menu_stroke.svg"} id="menuimg3" alt="" />
             </div>
             <div id="sidemenu" className="hidden">
-                <Linklist logged={logged} />
-                <Auth setLogged={setLogged} />
+                <Linklist logged={logged} isAdmin={isAdmin} />
+                <Auth setLogged={setLogged} setIsAdmin={setIsAdmin}/>
             </div>
         </div>
     );

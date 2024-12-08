@@ -202,6 +202,7 @@ app.get('/api/getUserInfo', async (req, res) => {
             : `https://cdn.discordapp.com/embed/avatars/${userData.discriminator % 5}.png`;
 
         req.session.discord_id = userData.id ;
+        req.session.global_name = userData.global_name ;
 
         res.json({
             global_name: userData.global_name,
@@ -279,7 +280,8 @@ app.get('/api/isLogged', (req, res) => {
     const { sessionID } = req.cookies;
 
     if (!sessionID) {
-        return res.json({ isLogged: false });
+        return res.json({ isLogged: false,
+            isAdmin : false});
     }
 
     const query = 'SELECT * FROM sessions WHERE session_id = ?';
@@ -343,6 +345,29 @@ app.get('/api/isLogged', (req, res) => {
         }
     });
 });
+
+app.get('/api/adminInfo', (req, res) => {
+    const query = 'SELECT * FROM sessions';
+
+    connection.query(query, (err, results) => {
+        if (err) {
+            console.error("Error checking session ID:", err);
+            return res.status(500).send('Internal Server Error');
+        }
+
+        if (results.length > 0) {
+            try{
+                res.json(results);
+            }
+            catch (parseError) {
+                console.error("Error parsing session data:", parseError);
+                return res.status(500).send('Error parsing session data');
+            }
+        } else {
+            res.status(404).send('No session data found');
+        }
+    });
+})
 
 app.get('/*', (req,res) => {
     res.sendFile(path.join(__dirname, 'public', 'views', 'index.html'));

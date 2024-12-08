@@ -88,6 +88,7 @@ export default class Auth extends React.Component {
 
         if (response.ok) {
             this.props.setLogged(false);
+            this.props.setIsAdmin(false);
             this.setState({
                 username: null,
                 avatarUrl: null,

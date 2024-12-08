@@ -11,6 +11,7 @@ import './index.css';
 import SpreadSheet from "./components/spreadsheet/spreadsheet";
 import SpreadSheetLink from "./components/spreadsheet/spreasheetLink";
 import PageNotFound from "./components/not_found/PageNotFound";
+import Administration from "./components/administration/administration"
 
 dotenv.config();
 
@@ -41,6 +42,7 @@ function Application() {
 
 function AppWrapper() {
     const [logged, setLogged] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
         const checkLoginStatus = async () => {
@@ -51,6 +53,7 @@ function AppWrapper() {
                 });
                 const data = await response.json();
                 setLogged(data.isLogged);
+                setIsAdmin(data.isAdmin);
             } catch (error) {
                 console.error('Error checking login status:', error);
                 setLogged(false);
@@ -59,7 +62,7 @@ function AppWrapper() {
         checkLoginStatus();
     }, []);
 
-    const authValue = { logged, setLogged };
+    const authValue = { logged, setLogged, isAdmin, setIsAdmin };
 
     return (
         <AuthContext.Provider value={authValue}>
@@ -101,6 +104,14 @@ const router = createBrowserRouter([
                 <SpreadSheetLink/>
             </ProtectedRoute>
         ),
+    },
+    {
+        path: "/administration",
+        element:(
+            <ProtectedRoute>
+                <Administration/>
+            </ProtectedRoute>
+        )
     },
     {
         path: "*",
