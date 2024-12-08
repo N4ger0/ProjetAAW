@@ -4,7 +4,7 @@ import "./spreadsheet.css"
 import Header from "../header/header";
 
 function SpreadSheetLink() {
-    const { name } = useParams();
+    let { name } = useParams();
 
     const validNote = new RegExp('^\\s*(10|[0-9])\\s*$');
 
@@ -25,24 +25,22 @@ function SpreadSheetLink() {
 
     const [data, setData] = useState(null);
 
-    const loadData = async () => {
-        await fetch(`/api/spreadsheet/${name}`)
-            .then(response => response.json())
-            .then(data => setData(data))
-            .catch(error => console.error("Erreur de chargement : ", error));
-    }
-
-    const loadCanModify = async () => {
-        await fetch(`/api/canModify/${data[1][1]}`)
-            .then(response => response.json())
-            .then(pasdata => setcanModify(pasdata))
-            .catch(error => console.error("Erreur lors de l'appel a canModify : ", error));
-    }
-
     useEffect( () => {
-        loadData()
-        loadCanModify()
-    }, [name, data]);
+        fetch(`/api/spreadsheet/${name}`)
+            .then(response => response.json())
+            .then(res => setData(res))
+            .catch(error => console.error("Erreur de chargement : ", error));
+    }, [name]);
+
+    useEffect(() => {
+        if (data && data[1] && data[1][1]) {
+            fetch(`/api/canModify/${data[1][1]}`)
+                .then(response => response.json())
+                .then(pasdata => setcanModify(pasdata))
+                .then(() => console.log(canModify))
+                .catch(error => console.error("Erreur lors de l'appel à canModify : ", error));
+        }
+    }, [data]);
 
     const buildBodyJson = () => {
         let result = [] ;
@@ -100,7 +98,16 @@ function SpreadSheetLink() {
                 console.error('Erreur réseau :', error);
             }
             setboutonEnabled(false);
-            window.location.reload();
+            fetch(`/api/spreadsheet/${name}`)
+                .then(response => response.json())
+                .then(res => setData(res))
+                .catch(error => console.error("Erreur de chargement : ", error));
+            setData(data);
+            let restables = document.getElementsByClassName('resetable') ;
+
+            for(let i = 0 ; i < restables.length; i++) {
+                restables[i].value = "" ;
+            }
             return ;
         }
         setboutonEnabled(false);
@@ -108,7 +115,7 @@ function SpreadSheetLink() {
 
     const [newvalues, setnewvalues] = useState([]);
     const [boutonEnabled, setboutonEnabled] = useState(false);
-    const [canModify, setcanModify] = useState(false) ;
+    let [canModify, setcanModify] = useState(false) ;
 
 
     return(
@@ -134,11 +141,11 @@ function SpreadSheetLink() {
                             <td>{row}</td>
                     ))}
                     </tr>
-                    { canModify ? (
+                    { canModify.canModify === true ? (
                     <tr key="2">
                         {data[0].map((row, index) => (
                             index == 1 || index == 2 ? ( <td></td>)
-                                : (<td><input type={"text"} onChange={e => newvalues[index] = e.target.value}/></td>)
+                                : (<td><input type={"text"} className={"resetable"} onChange={e => newvalues[index] = e.target.value}/></td>)
                         ))}
                     </tr> ) : null }
                     </tbody>

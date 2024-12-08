@@ -114,7 +114,7 @@ app.get('/api/spreadsheet/:name', async (req,res) => {
 })
 
 app.get('/api/canModify/:discord_id', (req, res) => {
-    const { userToModif } = req.params;
+    const { discord_id } = (req.params);
     const { sessionID } = req.cookies;
 
     const query = 'SELECT * FROM sessions WHERE session_id = ?';
@@ -138,14 +138,16 @@ app.get('/api/canModify/:discord_id', (req, res) => {
                 return res.status(500).send('Error parsing session data');
             }
 
-            const discordId = sessionData.discord_id;
+            const discord_id_db = sessionData.discord_id;
 
-            if (adminUsers.includes(discordId)) {
+            if (adminUsers.includes(discord_id_db)) {
                 res.json({canModify : true})
             }
             else {
+                console.log(discord_id);
+                console.log(discord_id_db);
 
-                if (userToModif === discordId) {
+                if (discord_id === discord_id_db) {
                     res.json({canModify: true})
                 } else {
                     res.json({canModify: false})
