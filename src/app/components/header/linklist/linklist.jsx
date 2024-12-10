@@ -11,7 +11,7 @@ export default class Linklist extends React.Component {
         console.log("Linklist props isAdmin: " + isAdmin);
         return (
             <div id="linklist">
-                <Link to="/">Menu</Link>
+                <Link to="/">Acceuil</Link>
                 <p/>
                 {logged && (
                     <Link to="/spreedSheet">Spreadsheet</Link>

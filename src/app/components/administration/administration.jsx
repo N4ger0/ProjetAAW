@@ -7,12 +7,26 @@ function Administration() {
     const [ data, setData ] = useState(null) ;
 
     useEffect(() => {
-        fetch("/api/adminInfo")
+        fetch("/api/admin/info")
             .then(res => res.json())
             .then(data => setData(data))
             .then(() => console.log(data))
             .catch(error => console.log(error))
     }, []);
+
+    function deconnectUser(discord_id) {
+        fetch(`api/admin/disconnect/${discord_id}`)
+            .then(response => response.text())
+            .then(data => {
+                if(data === "ok") {
+                    fetch("/api/admin/info")
+                        .then(res => res.json())
+                        .then(data => setData(data))
+                        .catch(error => console.log(error))
+                }
+            })
+            .catch(error => console.log(error))
+    }
 
     return (
         <div>
@@ -20,24 +34,29 @@ function Administration() {
             <div id={"content"}>
             { data !== null ? (
                 <table>
-                    <thead>
-                        <tr>
-                            <th> Discord id</th>
-                            <th> Username </th>
-                            <th> Expires in</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {data.map((row) => (
-                        <tr>
-                            <th> {row.data.discord_id } </th>
-                            <th> {row.data.global_name} </th>
-                            <th> {row.expires} </th>
-                        </tr>
+                    {data.map((row, rowindex) => (
+                         rowindex === 0 ? (
+                        <thead>
+                            <tr>
+                                {row.map((row2) => (
+                                    <th> {row2} </th>
+                                ))}
+                                <th> Deconnecter </th>
+                            </tr>
+                        </thead>
+                         ) : (
+                         <tbody>
+                             <tr>
+                                 {row.map((row2) => (
+                                     <th> {row2} </th>
+                                 ))}
+                                 <th> <button onClick={() => {deconnectUser(row[0])}}>Deconnecter</button></th>
+                             </tr>
+                        </tbody>
+                        )
                     ))}
-                    </tbody>
                 </table>
-            ) : null}
+            ) : null }
             </div>
         </div>
     )

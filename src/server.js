@@ -101,11 +101,23 @@ async function updateSheetData(spreadsheetId, range, values) {
 }
 
 app.get('/api/spreadsheet', async (req,res) => {
+    const { sessionID } = req.cookies;
+
+    if (!sessionID) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
     const data = await readSheetData(process.env.SPREADSHEET_ID, process.env.SPREADSHEET_FEUILLE);
     res.json(data);
 })
 
 app.get('/api/spreadsheet/:name', async (req,res) => {
+    const { sessionID } = req.cookies;
+
+    if (!sessionID) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
     const { name }= (req.params);
     let nameInArray = name.replaceAll('_',' ');
     const rawData = await readSheetData(process.env.SPREADSHEET_ID, process.env.SPREADSHEET_FEUILLE);
@@ -113,9 +125,13 @@ app.get('/api/spreadsheet/:name', async (req,res) => {
     res.json(data);
 })
 
-app.get('/api/canModify/:discord_id', (req, res) => {
+app.get('/api/spreadsheet/canModify/:discord_id', (req, res) => {
     const { discord_id } = (req.params);
     const { sessionID } = req.cookies;
+
+    if (!sessionID) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
 
     const query = 'SELECT * FROM sessions WHERE session_id = ?';
 
@@ -158,6 +174,12 @@ app.get('/api/canModify/:discord_id', (req, res) => {
 })
 
 app.post('/api/spreadsheet/change',async (req, res) => {
+    const { sessionID } = req.cookies;
+
+    if (!sessionID) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
     const update_value = req.body;
     const rawData = await readSheetData(process.env.SPREADSHEET_ID, process.env.SPREADSHEET_FEUILLE);
     const dataIndex = rawData.findIndex((row, index) => row[1] === update_value[1]) + 1; //discord_id == discord_id
@@ -173,6 +195,12 @@ app.post('/api/spreadsheet/change',async (req, res) => {
 })
 
 app.get('/api/getName', async (req, res) => {
+    const { sessionID } = req.cookies;
+
+    if (!sessionID) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
     let response = await axios.get("https://discord.com/api/users/@me", {
         headers: {
             Authorization: `Bearer ${req.session.access_token}`
@@ -184,6 +212,12 @@ app.get('/api/getName', async (req, res) => {
 })
 
 app.get('/api/getUserInfo', async (req, res) => {
+    const { sessionID } = req.cookies;
+
+    if (!sessionID) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
     try {
         if (!req.session.access_token) {
             return res.status(401).send('Unauthorized: No access token');
@@ -346,27 +380,87 @@ app.get('/api/isLogged', (req, res) => {
     });
 });
 
-app.get('/api/adminInfo', (req, res) => {
+app.get('/api/admin/info', (req, res) => {
+    const { sessionID } = req.cookies;
+
+    if (!sessionID) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
     const query = 'SELECT * FROM sessions';
 
+    result = [] ;
+    result.push(["Discord id", "Global name", "Expiration"])
+
     connection.query(query, (err, results) => {
+        if (err) {
+            console.error("Error checking sessions:", err);
+            return res.status(500).send('Internal Server Error');
+        }
+
+        if (results.length > 0) {
+            for (let i = 0; i < results.length; i++) {
+                if (results[i].expires > Date.now() / 1000) {
+                    let data = JSON.parse(results[i].data)
+                    result.push([data.discord_id, data.global_name, results[i].expires])
+                }
+                else {
+                    const deleteQuery = 'DELETE FROM sessions WHERE session_id = ?';
+
+                    connection.query(deleteQuery, [results[i].sessionID], (deleteErr, deleteResults) => {
+                        if (deleteErr) {
+                            console.error("Error deleting expired session:", deleteErr);
+                            return res.status(500).send('Internal Server Error');
+                        }
+                    });
+                }
+            }
+        } else {
+            res.status(404).send('No session data found');
+        }
+
+        try {
+            res.json(result);
+        } catch (parseError) {
+            console.error("Error parsing session data:", parseError);
+            return res.status(500).send('Error parsing session data');
+        }
+    });
+})
+
+app.get('/api/admin/disconnect/:discord_id', (req, res) => {
+    const { sessionID } = req.cookies;
+
+    if (!sessionID) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    const { discord_id } = (req.params);
+
+    const query = "SELECT * FROM sessions WHERE data LIKE ?";
+
+    let compteur = 0 ;
+
+    connection.query(query, ["%" + discord_id + "%"], (err, results) => {
         if (err) {
             console.error("Error checking session ID:", err);
             return res.status(500).send('Internal Server Error');
         }
 
         if (results.length > 0) {
-            try{
-                res.json(results);
+            const deleteQuery = 'DELETE FROM sessions WHERE session_id = ?';
+            for (let i = 0; i < results.length; i++) {
+                connection.query(deleteQuery, [results[i].session_id], (deleteErr, deleteResults) => {
+                    if (deleteErr) {
+                        console.error("Error deleting expired session:", deleteErr);
+                        return res.status(500).send('Internal Server Error');
+                    }
+                });
             }
-            catch (parseError) {
-                console.error("Error parsing session data:", parseError);
-                return res.status(500).send('Error parsing session data');
-            }
-        } else {
-            res.status(404).send('No session data found');
         }
     });
+
+    res.send("ok");
 })
 
 app.get('/*', (req,res) => {

@@ -34,7 +34,7 @@ function SpreadSheetLink() {
 
     useEffect(() => {
         if (data && data[1] && data[1][1]) {
-            fetch(`/api/canModify/${data[1][1]}`)
+            fetch(`/api/spreadsheet/canModify/${data[1][1]}`)
                 .then(response => response.json())
                 .then(pasdata => setcanModify(pasdata))
                 .then(() => console.log(canModify))
