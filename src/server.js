@@ -112,12 +112,6 @@ app.get('/api/spreadsheet', async (req,res) => {
 })
 
 app.get('/api/spreadsheet/:name', async (req,res) => {
-    const { sessionID } = req.cookies;
-
-    if (!sessionID) {
-        return res.status(401).json({ message: 'Unauthorized' });
-    }
-
     const { name }= (req.params);
     let nameInArray = name.replaceAll('_',' ');
     const rawData = await readSheetData(process.env.SPREADSHEET_ID, process.env.SPREADSHEET_FEUILLE);
