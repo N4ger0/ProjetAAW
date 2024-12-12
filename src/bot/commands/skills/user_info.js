@@ -4,7 +4,7 @@ const axios = require('axios');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('chs-skills')
+        .setName('chm-getskills')
         .setDescription('Provides information on the skill of the user, if the user is register in the data base')
         .addStringOption(option =>
             option.setName('first_name')
