@@ -24,7 +24,11 @@ module.exports = {
             queryString = queryString.replaceAll(" ", "_")
 
             console.log(`localhost:3000/api/spreadsheet/${queryString}`)
-            let result = await axios.get(`http://localhost:3000/api/spreadsheet/${queryString}`);
+            let result = (await axios.get(`http://localhost:3000/api/bot/${queryString}`, {
+                headers: {
+                    'Authorization': interaction.user.id
+                }
+            }));
             console.log(result);
             if(result.data.length === 2) {
 

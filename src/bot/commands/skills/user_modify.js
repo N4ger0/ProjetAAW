@@ -18,6 +18,16 @@ module.exports = {
         await interaction.deferReply();
         let user_id = interaction.user.id ;
         console.log(user_id);
+        let response = await axios.post("http://localhost:3000/api/bot/change",
+            {
+                skill : interaction.options.getString('skill'),
+                value : interaction.options.getInteger('value'),
+            },
+            {
+                headers: {
+                    'Authorization': interaction.user.id
+                }
+            })
         await interaction.editReply("done");
     },
 };

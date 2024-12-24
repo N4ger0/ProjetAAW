@@ -112,6 +112,12 @@ app.get('/api/spreadsheet', async (req,res) => {
 })
 
 app.get('/api/spreadsheet/:name', async (req,res) => {
+    const { sessionID } = req.cookies;
+
+    if (!sessionID) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
     const { name }= (req.params);
     let nameInArray = name.replaceAll('_',' ');
     const rawData = await readSheetData(process.env.SPREADSHEET_ID, process.env.SPREADSHEET_FEUILLE);
@@ -455,6 +461,51 @@ app.get('/api/admin/disconnect/:discord_id', (req, res) => {
     });
 
     res.send("ok");
+})
+
+app.get('/api/bot/:name', async (req,res) => {
+    let discord_id = req.header("Authorization") ;
+
+    if(!discord_id) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    if(isNaN(discord_id)) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    const { name } = (req.params);
+    let nameInArray = name.replaceAll('_',' ');
+    const rawData = await readSheetData(process.env.SPREADSHEET_ID, process.env.SPREADSHEET_FEUILLE);
+    const data = rawData.filter((item, index) => item[0] === nameInArray || index == 0); //LAISSER LE WARNING, index est number et 0 est int, on a besoin de l'inférence de type
+    res.json(data);
+})
+
+app.post('/api/bot/change',async (req, res) => {
+    let discord_id = req.header("Authorization") ;
+
+    if(!discord_id) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    if(isNaN(discord_id)) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    const {skill, value} = req.body;
+
+    console.log(skill)
+    console.log(value)
+    console.log(req.body)
+    const rawData = await readSheetData(process.env.SPREADSHEET_ID, process.env.SPREADSHEET_FEUILLE);
+    const rowIndex = rawData.findIndex((row, index) => row[1] === discord_id) + 1;
+    const colIndex = rawData[0].indexOf(skill);
+
+    if(rowIndex >= 0 && colIndex >= 0)
+    {
+        await updateSheetData(process.env.SPREADSHEET_ID, process.env.SPREADSHEET_FEUILLE + '!' + String.fromCharCode(65+colIndex) + rowIndex, [[value]])
+        res.sendStatus(200);
+    }
 })
 
 app.get('/*', (req,res) => {
