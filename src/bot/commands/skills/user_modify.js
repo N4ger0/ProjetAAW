@@ -27,7 +27,10 @@ module.exports = {
                 headers: {
                     'Authorization': interaction.user.id
                 }
-            })
-        await interaction.editReply("done");
+            }) ;
+        const resultEmbed = new EmbedBuilder()
+            .setTitle('Skill modifié')
+            .addFields({name: interaction.options.getString('skill'), value: interaction.options.getInteger('value').toString(), inline: true});
+        await interaction.editReply({embeds: [resultEmbed]});
     },
 };

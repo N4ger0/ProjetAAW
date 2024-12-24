@@ -52,7 +52,7 @@ function SpreadSheetLink() {
             }
             if(i == 2) {
                 const today = new Date();
-                const actualDate = today.getMonth()+'/'+today.getDay()+'/'+today.getFullYear()+' '+today.getHours()+':'+today.getMinutes()+':'+today.getSeconds();
+                const actualDate = today.toLocaleString("fr-FR");
                 result.push(actualDate) ;
                 continue ;
             }

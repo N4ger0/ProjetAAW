@@ -503,8 +503,10 @@ app.post('/api/bot/change',async (req, res) => {
 
     if(rowIndex >= 0 && colIndex >= 0)
     {
-        await updateSheetData(process.env.SPREADSHEET_ID, process.env.SPREADSHEET_FEUILLE + '!' + String.fromCharCode(65+colIndex) + rowIndex, [[value]])
-        res.sendStatus(200);
+        const now = new Date();
+        let response = await updateSheetData(process.env.SPREADSHEET_ID, process.env.SPREADSHEET_FEUILLE + '!' + String.fromCharCode(65+colIndex) + rowIndex, [[value]])
+        await updateSheetData(process.env.SPREADSHEET_ID, process.env.SPREADSHEET_FEUILLE + '!' + String.fromCharCode(65+2) + rowIndex, [[now.toLocaleString("fr-FR")]])
+        res.send(response).status(200);
     }
 })
 
