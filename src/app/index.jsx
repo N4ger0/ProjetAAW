@@ -31,10 +31,6 @@ function Application() {
                 <div id="div_stock">
                     <h1>Managez les skills de votre équipe !</h1>
                 </div>
-                <div id={"div_first_text"}>
-                    <b>Chez Skillset, nous croyons qu'une équipe compétente est la clé de tout succès !</b>
-                </div>
-                <img src={"/img/rectangle.svg"} alt={"rectangle"} />
             </div>
         </div>
     );
